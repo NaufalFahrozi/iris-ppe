@@ -84,6 +84,23 @@ Temuan saat uji: (1) tombol di kartu node sempat hilang-muncul tiap refresh sehi
 dengan merender kerangka kartu sekali dan hanya memperbarui isinya. (2) Satu kali run demo kedua node Wokwi tidak
 berjalan (penyebab tidak terekam); run ulang dengan log wokwi-cli disimpan berjalan normal.
 
+## Irisan 3 — Pipeline vision (video → YOLO + tracking → aturan → MQTT → ESP32)
+
+Diuji 2026-10-29 dengan bobot sementara (run 2, epoch 10) dan video stok Pexels (lisensi Pexels, tidak di-commit):
+`pexels-5423610` (1 pekerja, helm hitam + rompi, tampak belakang) dan `pexels-8965561` (pekerja berhelm tanpa rompi).
+ESP32 di Wokwi mode LIVE gate1, lewat broker.hivemq.com. Skrip: `firmware/test/vision_e2e.py`.
+
+| ID | Test Case | Input/Condition | Expected Result | Actual Result | Status | Bukti |
+|---|---|---|---|---|---|---|
+| V1 | Aturan kepatuhan (unit) | Kotak buatan: APD lengkap, rompi hilang, helm di tangan, helm milik orang lain, ROI, kedip 35 FPS | Sesuai aturan; status tidak berkedip | 7/7 lulus | Lulus | `vision/test_compliance.py` |
+| V2 | Pekerja patuh (T1 dengan video) | Video 5423610 | Akhirnya GRANTED dan stabil | Sebelum perbaikan: palang **buka-tutup 6×** (keyakinan helm hitam 0,16–0,36 berkedip di sekitar ambang). Setelah voting berbasis waktu 1 s: DENIED sekali di awal, lalu GRANTED stabil | Lulus setelah perbaikan | `docs/assets/irisan3/vision-e2e-serial.log` |
+| V3 | Rompi tidak dipakai (T2 dengan video) | Video 8965561 | DENIED, missing=vest | DENIED stabil, missing=vest | Lulus | idem |
+| V4 | Vision berhenti (T3) | Proses vision selesai | FAULT, gerbang terkunci | `DENIED -> FAULT` ±5 s setelah video habis | Lulus | idem |
+| V5 | Kecepatan | 1080p, RTX 4050 berbagi GPU dengan training | Real-time | 33–40 FPS (diukur pipeline) | Lulus | `vision-e2e-vision.log` |
+
+Temuan: deteksi helm hitam tampak belakang lemah pada bobot sementara (DENIED awal di V2). Ditindaklanjuti dengan run 3
+(data helm ×19) dan ambang per kelas yang akan dihitung dari kurva F1 validasi.
+
 ## Skenario utama (T1–T6)
 
 | ID | Test Case | Input/Condition | Expected Result | Actual Result | Status | Bukti |

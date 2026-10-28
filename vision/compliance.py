@@ -70,20 +70,24 @@ def in_roi(person: Box, roi: list[tuple[float, float]] | None, width: int, heigh
     return inside
 
 
+VOTE_WINDOW_S = 1.0  # status APD = mayoritas deteksi dalam jendela waktu ini (tidak bergantung FPS)
+
+
 @dataclass
 class TrackState:
-    """Riwayat per track ID: voting beberapa frame terakhir agar status tidak berkedip, plus timer pelanggaran."""
-    helmet: deque = field(default_factory=lambda: deque(maxlen=8))
-    vest: deque = field(default_factory=lambda: deque(maxlen=8))
+    """Riwayat per track ID: voting dalam jendela waktu agar status tidak berkedip, plus timer pelanggaran."""
+    history: deque = field(default_factory=deque)  # (waktu, helm, rompi)
     violation_since: float | None = None
     last_seen: float = 0.0
 
-    def update(self, helmet: bool, vest: bool, now: float) -> dict:
-        self.helmet.append(helmet)
-        self.vest.append(vest)
+    def update(self, helmet: bool, vest: bool, now: float, window_s: float = VOTE_WINDOW_S) -> dict:
+        self.history.append((now, helmet, vest))
+        while self.history and now - self.history[0][0] > window_s:
+            self.history.popleft()
         self.last_seen = now
-        h = sum(self.helmet) * 2 >= len(self.helmet)  # mayoritas (seri dianggap patuh)
-        v = sum(self.vest) * 2 >= len(self.vest)
+        n = len(self.history)
+        h = sum(x[1] for x in self.history) * 2 >= n  # mayoritas (seri dianggap patuh)
+        v = sum(x[2] for x in self.history) * 2 >= n
         if h and v:
             self.violation_since = None
         elif self.violation_since is None:

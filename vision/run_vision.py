@@ -54,11 +54,16 @@ def main() -> None:
     ap.add_argument("--source", default="0", help="0 = webcam, path video/folder gambar, atau URL stream")
     ap.add_argument("--node", default="gate1", help="gate1 / zoneA (harus sama dengan firmware)")
     ap.add_argument("--roi", default=None, help='poligon ROI ternormalisasi, mis. "0,0.4;1,0.4;1,1;0,1" (gerbang)')
-    ap.add_argument("--conf", type=float, default=0.4)
+    ap.add_argument("--conf", type=float, default=0.4, help="ambang person")
+    ap.add_argument("--conf-helmet", type=float, default=0.3)
+    ap.add_argument("--conf-vest", type=float, default=0.3)
     ap.add_argument("--imgsz", type=int, default=640)
     ap.add_argument("--rate", type=float, default=5.0, help="maks. publish detection per detik")
     ap.add_argument("--show", action="store_true", help="tampilkan jendela anotasi (q = keluar)")
     ap.add_argument("--no-mqtt", action="store_true", help="uji lokal tanpa broker")
+    ap.add_argument("--debug-dir", type=Path, default=None,
+                    help="khusus pengujian: simpan frame beranotasi tiap --debug-every frame (jangan untuk kamera nyata)")
+    ap.add_argument("--debug-every", type=int, default=30)
     args = ap.parse_args()
 
     model = YOLO(args.weights)
@@ -71,8 +76,11 @@ def main() -> None:
           f"mqtt={'off' if client is None else iris_mqtt.HOST}", flush=True)
 
     fps, last_pub, last_hb, last_log, frames = 0.0, 0.0, 0.0, time.time(), 0
+    summary: dict[int, dict] = {}  # status terakhir per track ID (ringkasan akhir)
     t_prev = time.time()
-    for res in model.track(source, stream=True, persist=True, tracker="bytetrack.yaml", conf=args.conf,
+    # Model dijalankan dengan ambang terendah, lalu disaring per kelas (helm/rompi boleh lebih rendah dari person)
+    min_conf = {PERSON: args.conf, HELMET: args.conf_helmet, VEST: args.conf_vest}
+    for res in model.track(source, stream=True, persist=True, tracker="bytetrack.yaml", conf=min(min_conf.values()),
                            imgsz=args.imgsz, verbose=False):
         now = time.time()
         fps = 0.9 * fps + 0.1 * (1 / max(now - t_prev, 1e-6)) if fps else 1 / max(now - t_prev, 1e-6)
@@ -87,9 +95,9 @@ def main() -> None:
         ids = boxes.id.int().tolist() if boxes.id is not None else [None] * len(cls)
 
         persons = [(tid if tid is not None else -(i + 1), Box(*b, c))
-                   for i, (k, b, c, tid) in enumerate(zip(cls, xyxy, confs, ids)) if k == PERSON]
-        helmets = [Box(*b, c) for k, b, c in zip(cls, xyxy, confs) if k == HELMET]
-        vests = [Box(*b, c) for k, b, c in zip(cls, xyxy, confs) if k == VEST]
+                   for i, (k, b, c, tid) in enumerate(zip(cls, xyxy, confs, ids)) if k == PERSON and c >= args.conf]
+        helmets = [Box(*b, c) for k, b, c in zip(cls, xyxy, confs) if k == HELMET and c >= args.conf_helmet]
+        vests = [Box(*b, c) for k, b, c in zip(cls, xyxy, confs) if k == VEST and c >= args.conf_vest]
 
         ppe = assign_ppe([p for _, p in persons], helmets, vests)
         inside = [in_roi(p, roi, w, h) for _, p in persons]
@@ -110,16 +118,26 @@ def main() -> None:
                   flush=True)
             last_log = now
 
-        if args.show:
-            cv2.imshow("IRIS vision", draw(res.orig_img.copy(), persons, states, inside, roi, fps))
-            if cv2.waitKey(1) & 0xFF == ord("q"):
-                break
+        for (tid, _), st, ok in zip(persons, states, inside):
+            if ok and tid >= 0:
+                summary[tid] = st
+        if args.show or (args.debug_dir and frames % args.debug_every == 0):
+            vis = draw(res.orig_img.copy(), persons, states, inside, roi, fps)
+            if args.debug_dir:
+                args.debug_dir.mkdir(parents=True, exist_ok=True)
+                cv2.imwrite(str(args.debug_dir / f"frame_{frames:05d}.jpg"), vis)
+            if args.show:
+                cv2.imshow("IRIS vision", vis)
+                if cv2.waitKey(1) & 0xFF == ord("q"):
+                    break
 
     if client:
         client.loop_stop()
         client.disconnect()
     cv2.destroyAllWindows()
-    print(f"[VISION] selesai, {frames} frame", flush=True)
+    print(f"[VISION] selesai, {frames} frame, fps akhir {fps:.1f}, {len(summary)} track orang", flush=True)
+    for tid, st in sorted(summary.items()):
+        print(f"[VISION]   #{tid}: helmet={st['helmet']} vest={st['vest']} violation_s={st['violation_s']}", flush=True)
 
 
 if __name__ == "__main__":

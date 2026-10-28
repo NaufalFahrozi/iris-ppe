@@ -48,6 +48,18 @@ def test_vote_smooths_flicker_and_timer():
     assert not t.tracks
 
 
+def test_no_flapping_at_high_fps():
+    # Regresi uji video: helm terdeteksi ~1 dari 3 frame pada 35 FPS -> status harus stabil (tidak berkedip)
+    t = ComplianceTracker()
+    flips, prev = 0, None
+    for i in range(140):  # 4 detik
+        s = t.update(1, i % 3 == 0, True, now=i / 35)
+        if i > 35:
+            flips += prev is not None and s["helmet"] != prev
+            prev = s["helmet"]
+    assert flips == 0 and prev is False
+
+
 if __name__ == "__main__":
     tests = [v for k, v in dict(globals()).items() if k.startswith("test_")]
     for fn in tests:
