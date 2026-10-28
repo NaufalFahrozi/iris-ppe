@@ -6,6 +6,7 @@ Setiap irisan dicatat di sini: Test Case, Input/Condition, Expected Result, Actu
 
 | ID | Test Case | Input/Condition | Expected Result | Actual Result | Status | Bukti |
 |---|---|---|---|---|---|---|
+| F0 | ESP32 + LED + tombol di Wokwi CLI (2026-10-29) | Scenario `firmware/test/feasibility.test.yaml`: tekan lalu lepas `btn1` (GPIO27, pull-up) | Log `[BOOT]`, lalu `button=PRESSED led=ON`, lalu `button=RELEASED led=OFF`; LED GPIO26 mengikuti tombol | Ketiga log cocok, wokwi-cli v0.29.1 "Scenario completed successfully", exit 0 | Lulus (verifikasi visual rangkaian di editor Wokwi belum) | `docs/assets/step0/feasibility-serial.log` |
 
 ## Skenario utama (T1–T6)
 

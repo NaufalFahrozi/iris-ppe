@@ -1,0 +1,16 @@
+name: 'IRIS feasibility - LED follows button'
+version: 1
+author: 'Tim Montblanc'
+
+steps:
+  - wait-serial: '[BOOT] IRIS feasibility ready'
+  - set-control:
+      part-id: btn1
+      control: pressed
+      value: 1
+  - wait-serial: '[IO] button=PRESSED led=ON'
+  - set-control:
+      part-id: btn1
+      control: pressed
+      value: 0
+  - wait-serial: '[IO] button=RELEASED led=OFF'
