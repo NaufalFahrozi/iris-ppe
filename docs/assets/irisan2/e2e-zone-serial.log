@@ -14,23 +14,23 @@ entry 0x400805dc
 [NET] wifi connected ip=10.13.37.2
 [MQTT] connecting broker.hivemq.com:8883 (TLS) id=iris-zoneA-c40a24
 [MQTT] connected, subscribed sic8-montblanc/iris/{zoneA,server}/...
-[STATUS] {"ts":1793216891,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
-[STATUS] {"ts":1793216891,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
-[MQTT] rx detection persons=1 violators=0 missing=-
+[STATUS] {"ts":1793220456,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793220456,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
 [MQTT] heartbeat ok
+[MQTT] rx detection persons=1 violators=0 missing=-
 [STATE] FAULT -> NORMAL missing=- persons=1
 [EVENT] node=zoneA type=recovered missing=- persons=1 duration_s=0.0
-[STATUS] {"ts":1793216892,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":1793220456,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}
 [MQTT] rx detection persons=1 violators=1 missing=helmet
 [STATE] NORMAL missing=helmet
-[STATUS] {"ts":1793216892,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":1793220457,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":0.0}
 [STATE] NORMAL -> WARNING missing=helmet persons=1
-[EVENT] node=zoneA type=warning missing=helmet persons=1 duration_s=3.4
-[STATUS] {"ts":1793216893,"node":"zoneA","mode":"zone","source":"live","state":"WARNING","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":3.4}
+[EVENT] node=zoneA type=warning missing=helmet persons=1 duration_s=3.2
+[STATUS] {"ts":1793220458,"node":"zoneA","mode":"zone","source":"live","state":"WARNING","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":3.2}
 [STATE] WARNING -> ALARM missing=helmet persons=1
-[EVENT] node=zoneA type=alarm missing=helmet persons=1 duration_s=8.4
-[STATUS] {"ts":1793216895,"node":"zoneA","mode":"zone","source":"live","state":"ALARM","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":8.4}
+[EVENT] node=zoneA type=alarm missing=helmet persons=1 duration_s=8.2
+[STATUS] {"ts":1793220460,"node":"zoneA","mode":"zone","source":"live","state":"ALARM","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":8.2}
 [MQTT] rx detection persons=1 violators=0 missing=-
 [STATE] ALARM -> NORMAL missing=- persons=1
 [EVENT] node=zoneA type=cleared missing=- persons=1 duration_s=0.0
-[STATUS] {"ts":1793216895,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":1793220460,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}

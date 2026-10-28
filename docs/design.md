@@ -50,6 +50,7 @@ kamera/YOLO, jadi pada mode uji (TEST) hasil deteksi disimulasikan dengan push b
 | OLED SSD1306 128×64 I2C (`board-ssd1306`) | 1 | Menampilkan status dan APD yang kurang | Informasi spesifik untuk pekerja ("HELM TIDAK TERDETEKSI"); I2C hanya butuh 2 pin |
 | Push button (`wokwi-pushbutton`) | 4 | `RESET` supervisor; `PERSON`, `HELMET`, `VEST` untuk simulasi deteksi | Input fisik; satu-satunya input yang bisa diotomatisasi oleh scenario `wokwi-cli` (`set-control pressed`) |
 | Slide switch (`wokwi-slide-switch`) | 2 | `ROLE` (GATE/ZONE), `SOURCE` (LIVE/TEST) | Pilihan mode yang terlihat di rangkaian; satu rangkaian bisa mendemokan kedua mode |
+| Label teks (`wokwi-text`) | 4 | Keterangan INPUT/OUTPUT dan fungsi slide switch | Hanya visual di Wokwi, agar rangkaian mudah dibaca |
 | Kamera (di luar Wokwi) | 1/titik | Sumber citra server vision | Komponen utama deteksi APD |
 
 Catatan implementasi nyata (stage 3): tombol `PERSON/HELMET/VEST` hanya ada untuk mode uji; node lapangan cukup
@@ -58,29 +59,36 @@ memakai modul atau transistor driver.
 
 ## 3. Pemetaan GPIO
 
-Status: draft, sudah lulus uji wokwi-cli; menunggu review Christian dan verifikasi visual rangkaian.
+Status: draft v2 (2026-10-29), lulus uji wokwi-cli dan dicek visual di editor wokwi.com; menunggu review Christian.
 
-| GPIO | Arah | Terhubung ke | Catatan |
-|---|---|---|---|
-| 18 | Output (PWM) | Servo PWM | LEDC 50 Hz via ESP32Servo |
-| 19 | Output (PWM) | Buzzer (+) | `ledcWriteTone` |
-| 25 | Output | LED hijau → 220 Ω → GND | |
-| 26 | Output | LED kuning → 220 Ω → GND | |
-| 27 | Output | LED merah → 220 Ω → GND | |
-| 21 | I2C SDA | OLED SDA | Pin I2C default ESP32 |
-| 22 | I2C SCL | OLED SCL | Pin I2C default ESP32 |
-| 32 | Input, pull-up internal | Tombol `PERSON` → GND | Aktif LOW, toggle (mode TEST) |
-| 33 | Input, pull-up internal | Tombol `HELMET` → GND | Aktif LOW, toggle (mode TEST) |
-| 14 | Input, pull-up internal | Tombol `VEST` → GND | Aktif LOW, toggle (mode TEST) |
-| 13 | Input, pull-up internal | Tombol `RESET` → GND | Aktif LOW; reset/ack alarm |
-| 34 | Input only | Slide switch `ROLE` (kiri GND = GATE, kanan 3V3 = ZONE) | Tanpa pull-up, switch memberi level pasti |
-| 35 | Input only | Slide switch `SOURCE` (kiri GND = LIVE, kanan 3V3 = TEST) | Tanpa pull-up, switch memberi level pasti |
+Prinsip tata letak: **input di sisi kiri board, output di sisi kanan**, dan urutan komponen di diagram mengikuti
+urutan pin dari atas ke bawah, sehingga kabel tidak saling silang (lihat `firmware/diagram.json`).
 
-Pin yang **dihindari**: 0, 2, 5, 12, 15 (strapping), 6–11 (flash), 1/3 (UART Serial Monitor).
-Pin input-only 34/35 dipakai untuk slide switch karena tidak butuh pull-up dan tidak pernah dipakai sebagai output.
+| GPIO | Sisi | Arah | Terhubung ke | Catatan |
+|---|---|---|---|---|
+| 32 | kiri | Input, pull-up internal | Slide switch `ROLE` (kaki tengah; kaki kiri ke GND) | Kiri = LOW = GATE, kanan (lepas) = HIGH = ZONE |
+| 33 | kiri | Input, pull-up internal | Slide switch `SOURCE` | Kiri = LOW = LIVE (MQTT), kanan = HIGH = TEST (tombol) |
+| 25 | kiri | Input, pull-up internal | Tombol `PERSON` → GND | Aktif LOW, toggle (mode TEST) |
+| 26 | kiri | Input, pull-up internal | Tombol `HELMET` → GND | Aktif LOW, toggle (mode TEST) |
+| 27 | kiri | Input, pull-up internal | Tombol `VEST` → GND | Aktif LOW, toggle (mode TEST) |
+| 14 | kiri | Input, pull-up internal | Tombol `RESET` → GND | Aktif LOW; reset/ack alarm |
+| 23 | kanan | Output (PWM) | Buzzer (+) | `ledcWriteTone` |
+| 22 | kanan | I2C SDA | OLED SDA | I2C bisa di pin mana pun via `Wire.begin(SDA, SCL)` |
+| 21 | kanan | I2C SCL | OLED SCL | |
+| 19 | kanan | Output (PWM) | Servo PWM | LEDC 50 Hz via ESP32Servo |
+| 18 | kanan | Output | 220 Ω → LED hijau → GND | |
+| 17 | kanan | Output | 220 Ω → LED kuning → GND | |
+| 16 | kanan | Output | 220 Ω → LED merah → GND | |
 
-**Power & ground:** semua komponen berbagi GND ESP32. OLED dan slide switch dari 3V3. Servo V+ dari pin 5V
-(di Wokwi; pada hardware nyata dari catu 5 V terpisah dengan ground bersama).
+Pin yang **dihindari**: 0, 2, 5, 12, 15 (strapping), 6–11 (flash), 1/3 (UART Serial Monitor), 34–39 (input-only tanpa
+pull-up internal). GPIO 16/17 aman pada modul ESP32-WROOM (DevKitC v4); pada modul WROVER keduanya dipakai PSRAM.
+
+Perubahan dari draft v1: slide switch pindah dari GPIO 34/35 (perlu kabel 3V3) ke 32/33 dengan pull-up internal
+(hanya perlu kabel GND), dan semua output dipindah ke sisi kanan agar wiring rapi.
+
+**Power & ground:** semua komponen berbagi GND ESP32 (bus GND di kiri dan trunk bawah ke GND.1; buzzer ke GND.2,
+OLED ke GND.3). OLED dari 3V3. Servo V+ dari pin 5V (di Wokwi; pada hardware nyata dari catu 5 V terpisah dengan ground
+bersama).
 
 ## 4. State machine
 

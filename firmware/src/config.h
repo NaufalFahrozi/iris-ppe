@@ -1,20 +1,22 @@
 // IRIS — konfigurasi pin dan konstanta. Detail & alasan: docs/design.md
 #pragma once
 
-// ---- Pin (lihat docs/design.md bagian 3) ----
-constexpr int PIN_SERVO = 18;
-constexpr int PIN_BUZZER = 19;
-constexpr int PIN_LED_GREEN = 25;
-constexpr int PIN_LED_YELLOW = 26;
-constexpr int PIN_LED_RED = 27;
-constexpr int PIN_SDA = 21;
-constexpr int PIN_SCL = 22;
-constexpr int PIN_BTN_PERSON = 32;  // tombol ke GND, pull-up internal
-constexpr int PIN_BTN_HELMET = 33;
-constexpr int PIN_BTN_VEST = 14;
-constexpr int PIN_BTN_RESET = 13;
-constexpr int PIN_SW_ROLE = 34;     // LOW = GATE, HIGH = ZONE (input-only)
-constexpr int PIN_SW_SOURCE = 35;   // LOW = LIVE (MQTT), HIGH = TEST (tombol)
+// ---- Pin (lihat docs/design.md bagian 3): input di sisi kiri board, output di sisi kanan ----
+// Output (sisi kanan, urut dari atas)
+constexpr int PIN_BUZZER = 23;
+constexpr int PIN_SDA = 22;
+constexpr int PIN_SCL = 21;
+constexpr int PIN_SERVO = 19;
+constexpr int PIN_LED_GREEN = 18;
+constexpr int PIN_LED_YELLOW = 17;
+constexpr int PIN_LED_RED = 16;
+// Input (sisi kiri, urut dari atas); semua ke GND dengan pull-up internal (aktif LOW)
+constexpr int PIN_SW_ROLE = 32;     // slide switch: kiri (ke GND) = GATE, kanan (lepas) = ZONE
+constexpr int PIN_SW_SOURCE = 33;   // slide switch: kiri (ke GND) = LIVE (MQTT), kanan (lepas) = TEST (tombol)
+constexpr int PIN_BTN_PERSON = 25;
+constexpr int PIN_BTN_HELMET = 26;
+constexpr int PIN_BTN_VEST = 27;
+constexpr int PIN_BTN_RESET = 14;
 
 // ---- Jaringan & MQTT (broker publik, tidak ada rahasia; lihat CLAUDE.md bagian 5) ----
 constexpr const char* WIFI_SSID = "Wokwi-GUEST";

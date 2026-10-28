@@ -26,8 +26,11 @@ disimulasikan tombol `PERSON/HELMET/VEST`. Ini menguji **logic ESP32**, belum pi
 | I1-7 | Zona: T6 (logic) | Helm dilepas terus | NORMAL → WARNING (3 s, LED kuning) → ALARM (8 s, LED merah, event) → NORMAL saat patuh | Sesuai; event `warning` 3,0 s, `alarm` 8,0 s, `cleared` | Lulus | `zone-serial.log`, `oled-zone-warning.png`, `oled-zone-alarm.png` |
 | I1-8 | Fail-safe tanpa data (bagian T3) | `SOURCE=LIVE`, belum ada data vision | Tetap FAULT, palang tertutup, OLED "OFFLINE" | Status periodik `"state":"FAULT","gate":"closed"` | Lulus | `failsafe-serial.log`, `oled-gate-fault.png` |
 
-Belum: **verifikasi visual rangkaian** di editor Wokwi (wajib menurut CLAUDE.md), dan T3 penuh (heartbeat berhenti
-setelah sempat aktif) yang menunggu irisan 2.
+Verifikasi visual (2026-10-29): rangkaian dibuka di editor wokwi.com. Versi pertama terhubung benar tapi semrawut;
+tata letak dirapikan (input kiri, output kanan, label `wokwi-text`, bus GND) dan pin dipetakan ulang (GPIO v2,
+`docs/design.md` bagian 3). Bukti: `docs/assets/irisan1/wokwi-circuit-first-look.jpg` (sebelum) dan
+`docs/assets/irisan1/wokwi-circuit.png` (sesudah). Setelah pemetaan ulang, I1-1..I1-8 diulang dan **lulus**
+(LED dicek di GPIO 18/17/16). T3 penuh diuji di irisan 2.
 
 ## Irisan 2 — End-to-end MQTT (ESP32 LIVE ↔ broker.hivemq.com:8883 TLS ↔ Python)
 
@@ -56,6 +59,9 @@ Bukti: `docs/assets/irisan2/e2e-gate.md`, `e2e-zone.md` (tabel + daftar event ya
 Catatan: satu kali run gate gagal 0/9 karena simulasi Wokwi tidak berjalan (log serial kosong); penyebab tidak terekam
 karena output wokwi-cli saat itu tidak disimpan. Harness sekarang menyimpan output wokwi-cli dan berhenti jika simulasi
 mati. Run ulang pada firmware yang sama: 9/9 lulus.
+
+Diulang setelah GPIO v2 (rangkaian dirapikan): gate 9/9 dan zone 4/4 tetap lulus (latency 0,9–1,4 s; T3 9,6 s);
+`e2e-gate.md`/`e2e-zone.md` berisi hasil run terakhir.
 
 Regresi mode TEST (irisan 1) setelah kode jaringan ditambahkan: gate, zone, failsafe **lulus**. Ditemukan bahwa
 handshake TLS menahan `loop()` beberapa detik; scenario kini menunggu `[MQTT] connected` sebelum menekan tombol, dan

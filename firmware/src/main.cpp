@@ -456,8 +456,8 @@ void setup() {
   pinMode(PIN_LED_GREEN, OUTPUT);
   pinMode(PIN_LED_YELLOW, OUTPUT);
   pinMode(PIN_LED_RED, OUTPUT);
-  pinMode(PIN_SW_ROLE, INPUT);
-  pinMode(PIN_SW_SOURCE, INPUT);
+  pinMode(PIN_SW_ROLE, INPUT_PULLUP);   // switch hanya menyambung ke GND; posisi lepas = HIGH
+  pinMode(PIN_SW_SOURCE, INPUT_PULLUP);
   btnPerson.begin();
   btnHelmet.begin();
   btnVest.begin();

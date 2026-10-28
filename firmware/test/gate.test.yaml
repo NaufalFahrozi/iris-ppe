@@ -1,4 +1,4 @@
-﻿name: 'IRIS gate mode (TEST source): T1, T2, T5, window, reset'
+name: 'IRIS gate mode (TEST source): T1, T2, T5, window, reset'
 version: 1
 author: 'Tim Montblanc'
 
@@ -32,7 +32,7 @@ steps:
   - wait-serial: '[STATE] DENIED -> GRANTED'
   - set-control: { part-id: btn_vest, control: pressed, value: 0 }
   - delay: 500ms
-  - expect-pin: { part-id: esp, pin: '25', value: 1 }
+  - expect-pin: { part-id: esp, pin: '18', value: 1 }
   - take-screenshot: { part-id: oled1, save-to: '../../docs/assets/irisan1/oled-gate-granted.png' }
 
   # T5: saat palang terbuka, pelanggar muncul (rompi dilepas) -> palang menutup + alarm
@@ -40,7 +40,7 @@ steps:
   - wait-serial: '[STATE] GRANTED -> DENIED missing=vest'
   - set-control: { part-id: btn_vest, control: pressed, value: 0 }
   - delay: 300ms
-  - expect-pin: { part-id: esp, pin: '27', value: 1 }
+  - expect-pin: { part-id: esp, pin: '16', value: 1 }
 
   # Jendela buka terbatas: palang menutup sendiri setelah OPEN_WINDOW_MS, dibuka lagi setelah jeda
   - set-control: { part-id: btn_vest, control: pressed, value: 1 }

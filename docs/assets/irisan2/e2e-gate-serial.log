@@ -14,46 +14,46 @@ entry 0x400805dc
 [NET] wifi connected ip=10.13.37.2
 [MQTT] connecting broker.hivemq.com:8883 (TLS) id=iris-gate1-c40a24
 [MQTT] connected, subscribed sic8-montblanc/iris/{gate1,server}/...
-[STATUS] {"ts":1793216959,"node":"gate1","mode":"gate","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
-[STATUS] {"ts":1793216959,"node":"gate1","mode":"gate","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
-[MQTT] rx detection persons=0 violators=0 missing=-
+[STATUS] {"ts":0,"node":"gate1","mode":"gate","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":0,"node":"gate1","mode":"gate","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
 [MQTT] heartbeat ok
+[MQTT] rx detection persons=0 violators=0 missing=-
 [STATE] FAULT -> IDLE missing=- persons=0
 [EVENT] node=gate1 type=recovered missing=- persons=0 duration_s=0.0
-[STATUS] {"ts":1793216959,"node":"gate1","mode":"gate","source":"live","state":"IDLE","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":0,"node":"gate1","mode":"gate","source":"live","state":"IDLE","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
 [MQTT] rx detection persons=1 violators=0 missing=-
 [STATE] IDLE -> GRANTED missing=- persons=1
 [ACT] servo=90 gate=open
 [EVENT] node=gate1 type=granted missing=- persons=1 duration_s=0.0
-[STATUS] {"ts":1793216960,"node":"gate1","mode":"gate","source":"live","state":"GRANTED","gate":"open","missing":[],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":0,"node":"gate1","mode":"gate","source":"live","state":"GRANTED","gate":"open","missing":[],"person_count":1,"violation_s":0.0}
 [MQTT] rx detection persons=1 violators=1 missing=vest
 [STATE] GRANTED -> DENIED missing=vest persons=1
 [ACT] servo=0 gate=closed
 [EVENT] node=gate1 type=denied missing=vest persons=1 duration_s=0.0
-[STATUS] {"ts":1793216960,"node":"gate1","mode":"gate","source":"live","state":"DENIED","gate":"closed","missing":["vest"],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":0,"node":"gate1","mode":"gate","source":"live","state":"DENIED","gate":"closed","missing":["vest"],"person_count":1,"violation_s":0.0}
 [MQTT] rx detection persons=2 violators=1 missing=helmet
 [STATE] DENIED missing=helmet
-[STATUS] {"ts":1793216960,"node":"gate1","mode":"gate","source":"live","state":"DENIED","gate":"closed","missing":["helmet"],"person_count":2,"violation_s":0.0}
+[STATUS] {"ts":1793220403,"node":"gate1","mode":"gate","source":"live","state":"DENIED","gate":"closed","missing":["helmet"],"person_count":2,"violation_s":0.0}
 [MQTT] rx detection persons=1 violators=0 missing=-
 [STATE] DENIED -> GRANTED missing=- persons=1
 [ACT] servo=90 gate=open
 [EVENT] node=gate1 type=granted missing=- persons=1 duration_s=0.0
-[STATUS] {"ts":1793216961,"node":"gate1","mode":"gate","source":"live","state":"GRANTED","gate":"open","missing":[],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":1793220403,"node":"gate1","mode":"gate","source":"live","state":"GRANTED","gate":"open","missing":[],"person_count":1,"violation_s":0.0}
 [MQTT] rx detection persons=2 violators=1 missing=vest
 [STATE] GRANTED -> DENIED missing=vest persons=2
 [ACT] servo=0 gate=closed
-[EVENT] node=gate1 type=denied missing=vest persons=2 duration_s=2.3
-[STATUS] {"ts":1793216961,"node":"gate1","mode":"gate","source":"live","state":"DENIED","gate":"closed","missing":["vest"],"person_count":2,"violation_s":2.3}
+[EVENT] node=gate1 type=denied missing=vest persons=2 duration_s=2.5
+[STATUS] {"ts":1793220404,"node":"gate1","mode":"gate","source":"live","state":"DENIED","gate":"closed","missing":["vest"],"person_count":2,"violation_s":2.5}
 [MQTT] rx override cmd=reset
 [INPUT] reset (mqtt) -> alarm acknowledged (buzzer off)
-[STATUS] {"ts":1793216966,"node":"gate1","mode":"gate","source":"live","state":"DENIED","gate":"closed","missing":["vest"],"person_count":2,"violation_s":6.0}
+[STATUS] {"ts":1793220409,"node":"gate1","mode":"gate","source":"live","state":"DENIED","gate":"closed","missing":["vest"],"person_count":2,"violation_s":6.2}
 [STATE] DENIED -> FAULT missing=vest persons=2
-[EVENT] node=gate1 type=fault missing=vest persons=2 duration_s=6.0
-[STATUS] {"ts":1793216968,"node":"gate1","mode":"gate","source":"live","state":"FAULT","gate":"closed","missing":["vest"],"person_count":2,"violation_s":6.0}
+[EVENT] node=gate1 type=fault missing=vest persons=2 duration_s=6.2
+[STATUS] {"ts":1793220410,"node":"gate1","mode":"gate","source":"live","state":"FAULT","gate":"closed","missing":["vest"],"person_count":2,"violation_s":6.2}
 [MQTT] rx detection persons=0 violators=0 missing=-
 [STATE] FAULT missing=-
-[STATUS] {"ts":1793216968,"node":"gate1","mode":"gate","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793220410,"node":"gate1","mode":"gate","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
 [MQTT] heartbeat ok
 [STATE] FAULT -> IDLE missing=- persons=0
 [EVENT] node=gate1 type=recovered missing=- persons=0 duration_s=0.0
-[STATUS] {"ts":1793216968,"node":"gate1","mode":"gate","source":"live","state":"IDLE","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793220411,"node":"gate1","mode":"gate","source":"live","state":"IDLE","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}

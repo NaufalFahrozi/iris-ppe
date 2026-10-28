@@ -1,4 +1,4 @@
-﻿name: 'IRIS zone mode (TEST source): T6 escalation and auto reset'
+name: 'IRIS zone mode (TEST source): T6 escalation and auto reset'
 version: 1
 author: 'Tim Montblanc'
 
@@ -39,11 +39,11 @@ steps:
   - set-control: { part-id: btn_helmet, control: pressed, value: 0 }
   - wait-serial: '[STATE] NORMAL -> WARNING missing=helmet'
   - delay: 300ms
-  - expect-pin: { part-id: esp, pin: '26', value: 1 }
+  - expect-pin: { part-id: esp, pin: '17', value: 1 }
   - take-screenshot: { part-id: oled1, save-to: '../../docs/assets/irisan1/oled-zone-warning.png' }
   - wait-serial: '[STATE] WARNING -> ALARM missing=helmet'
   - delay: 300ms
-  - expect-pin: { part-id: esp, pin: '27', value: 1 }
+  - expect-pin: { part-id: esp, pin: '16', value: 1 }
   - take-screenshot: { part-id: oled1, save-to: '../../docs/assets/irisan1/oled-zone-alarm.png' }
 
   # Patuh kembali -> reset otomatis

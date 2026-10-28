@@ -16,37 +16,38 @@ entry 0x400805dc
 [NET] wifi connected ip=10.13.37.2
 [MQTT] connecting broker.hivemq.com:8883 (TLS) id=iris-gate1-c40a24
 [MQTT] connected, subscribed sic8-montblanc/iris/{gate1,server}/...
-[STATUS] {"ts":0,"node":"gate1","mode":"gate","source":"test","state":"IDLE","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793220222,"node":"gate1","mode":"gate","source":"test","state":"IDLE","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793220223,"node":"gate1","mode":"gate","source":"test","state":"IDLE","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
 [INPUT] person=1 helmet=0 vest=0
 [STATE] IDLE -> DENIED missing=helmet,vest persons=1
 [EVENT] node=gate1 type=denied missing=helmet,vest persons=1 duration_s=0.0
-[STATUS] {"ts":1793216457,"node":"gate1","mode":"gate","source":"test","state":"DENIED","gate":"closed","missing":["helmet","vest"],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":1793220223,"node":"gate1","mode":"gate","source":"test","state":"DENIED","gate":"closed","missing":["helmet","vest"],"person_count":1,"violation_s":0.0}
 [INPUT] person=1 helmet=1 vest=0
-[STATE] DENIED missing=vest[STATUS] {"ts":1793216458,"node":"gate1","mode":"gate","source":"test","state":"DENIED","gate":"closed","missing":["vest"],"person_count":1,"violation_s":0.0}
+[STATE] DENIED missing=vest[STATUS] {"ts":1793220223,"node":"gate1","mode":"gate","source":"test","state":"DENIED","gate":"closed","missing":["vest"],"person_count":1,"violation_s":0.0}
 [INPUT] reset (button) -> alarm acknowledged (buzzer off)
 [INPUT] person=1 helmet=1 vest=1
 [STATE] DENIED -> GRANTED missing=- persons=1
 [ACT] servo=90 gate=open
 [EVENT] node=gate1 type=granted missing=- persons=1 duration_s=0.0
-[STATUS] {"ts":1793216458,"node":"gate1","mode":"gate","source":"test","state":"GRANTED","gate":"open","missing":[],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":1793220224,"node":"gate1","mode":"gate","source":"test","state":"GRANTED","gate":"open","missing":[],"person_count":1,"violation_s":0.0}
 [INPUT] person=1 helmet=1 vest=0
 [STATE] GRANTED -> DENIED missing=vest persons=1
 [ACT] servo=0 gate=closed
 [EVENT] node=gate1 type=denied missing=vest persons=1 duration_s=0.0
-[STATUS] {"ts":1793216459,"node":"gate1","mode":"gate","source":"test","state":"DENIED","gate":"closed","missing":["vest"],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":1793220224,"node":"gate1","mode":"gate","source":"test","state":"DENIED","gate":"closed","missing":["vest"],"person_count":1,"violation_s":0.0}
 [INPUT] person=1 helmet=1 vest=1
 [STATE] DENIED -> GRANTED missing=- persons=1
 [ACT] servo=90 gate=open
 [EVENT] node=gate1 type=granted missing=- persons=1 duration_s=0.0
-[STATUS] {"ts":1793216459,"node":"gate1","mode":"gate","source":"test","state":"GRANTED","gate":"open","missing":[],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":1793220225,"node":"gate1","mode":"gate","source":"test","state":"GRANTED","gate":"open","missing":[],"person_count":1,"violation_s":0.0}
 [STATE] GRANTED -> IDLE missing=- persons=1
 [ACT] servo=0 gate=closed
-[STATUS] {"ts":1793216464,"node":"gate1","mode":"gate","source":"test","state":"IDLE","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":1793220230,"node":"gate1","mode":"gate","source":"test","state":"IDLE","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}
 [STATE] IDLE -> GRANTED missing=- persons=1
 [ACT] servo=90 gate=open
 [EVENT] node=gate1 type=granted missing=- persons=1 duration_s=0.0
-[STATUS] {"ts":1793216466,"node":"gate1","mode":"gate","source":"test","state":"GRANTED","gate":"open","missing":[],"person_count":1,"violation_s":0.0}
+[STATUS] {"ts":1793220232,"node":"gate1","mode":"gate","source":"test","state":"GRANTED","gate":"open","missing":[],"person_count":1,"violation_s":0.0}
 [INPUT] person=0 helmet=1 vest=1
 [STATE] GRANTED -> IDLE missing=- persons=0
 [ACT] servo=0 gate=closed
-[STATUS] {"ts":1793216466,"node":"gate1","mode":"gate","source":"test","state":"IDLE","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793220232,"node":"gate1","mode":"gate","source":"test","state":"IDLE","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}

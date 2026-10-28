@@ -316,10 +316,10 @@ iris-ppe/
 
 - Ukuran model final (`yolo26m` vs `yolo26s`), diputuskan dari hasil training dan FPS
 - Nilai ambang eskalasi dan timeout fail-safe (nilai awal di `firmware/src/config.h`: warn 3 s, alarm 8 s, fail-safe 5 s, jendela buka 5 s)
-- Pemetaan GPIO final (draft di `docs/design.md` bagian 3, menunggu review Christian)
-- Rangkaian sudah dilihat di editor wokwi.com (2026-10-29, `docs/assets/irisan1/wokwi-circuit-first-look.jpg`): koneksi
-  sesuai rancangan, tapi tata letak kabel perlu dirapikan dan slide switch ROLE/SOURCE belum berlabel. Proyek wokwi.com
-  final (sketch, library, simpan dengan akun tim) belum dibuat.
+- Pemetaan GPIO final (draft v2 di `docs/design.md` bagian 3: input kiri, output kanan; menunggu review Christian)
+- Rangkaian sudah dirapikan dan dicek visual di editor wokwi.com (`docs/assets/irisan1/wokwi-circuit.png`). Proyek
+  wokwi.com final (tempel sketch + library, simpan dengan akun tim) belum dibuat; tempel kode harus via clipboard
+  karena editor Wokwi menambah kurung otomatis saat diketik.
 
 ---
 
@@ -389,7 +389,7 @@ Catat untuk setiap tes: Test Case, Input/Condition, Expected Result, Actual Resu
 
 - [x] 0. Setup & uji kelayakan Wokwi CLI (2026-10-29: repo, tools, uji Wokwi F0 lulus, uji TLS broker lulus, SH17 siap, training run `sh17-yolo26m` dimulai)
 - [x] 1. Rancangan dasar (draft `docs/design.md`; GPIO menunggu review Christian)
-- [ ] 2. Irisan 1 – Gerbang tanpa YOLO (logic gerbang+zona lulus 8 uji wokwi-cli I1-1..I1-8; **sisa: verifikasi visual rangkaian di Wokwi**)
+- [x] 2. Irisan 1 – Gerbang tanpa YOLO (logic gerbang+zona lulus 8 uji wokwi-cli I1-1..I1-8; rangkaian dirapikan dan dicek visual)
 - [x] 3. Irisan 2 – MQTT (TLS + verifikasi CA, e2e via simulator Python: T1–T5 + override 9/9, T6 4/4 di Wokwi; T1–T6 dengan vision asli menunggu irisan 3/5)
 - [ ] 4. Irisan 3 – Vision
 - [x] 5. Irisan 4 – Dashboard (Plotly Dash `dashboard/app.py`; uji D1–D5 lulus dengan 2 ESP32 Wokwi + simulator vision)
