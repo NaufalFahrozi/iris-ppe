@@ -1,0 +1,36 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+[BOOT] IRIS node=zoneA role=ZONE source=LIVE
+[NET] wifi connecting ssid=Wokwi-GUEST
+[NET] wifi connected ip=10.13.37.2
+[MQTT] connecting broker.hivemq.com:8883 (TLS) id=iris-zoneA-c40a24
+[MQTT] connected, subscribed sic8-montblanc/iris/{zoneA,server}/...
+[STATUS] {"ts":1793216891,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793216891,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[MQTT] rx detection persons=1 violators=0 missing=-
+[MQTT] heartbeat ok
+[STATE] FAULT -> NORMAL missing=- persons=1
+[EVENT] node=zoneA type=recovered missing=- persons=1 duration_s=0.0
+[STATUS] {"ts":1793216892,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}
+[MQTT] rx detection persons=1 violators=1 missing=helmet
+[STATE] NORMAL missing=helmet
+[STATUS] {"ts":1793216892,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":0.0}
+[STATE] NORMAL -> WARNING missing=helmet persons=1
+[EVENT] node=zoneA type=warning missing=helmet persons=1 duration_s=3.4
+[STATUS] {"ts":1793216893,"node":"zoneA","mode":"zone","source":"live","state":"WARNING","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":3.4}
+[STATE] WARNING -> ALARM missing=helmet persons=1
+[EVENT] node=zoneA type=alarm missing=helmet persons=1 duration_s=8.4
+[STATUS] {"ts":1793216895,"node":"zoneA","mode":"zone","source":"live","state":"ALARM","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":8.4}
+[MQTT] rx detection persons=1 violators=0 missing=-
+[STATE] ALARM -> NORMAL missing=- persons=1
+[EVENT] node=zoneA type=cleared missing=- persons=1 duration_s=0.0
+[STATUS] {"ts":1793216895,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}

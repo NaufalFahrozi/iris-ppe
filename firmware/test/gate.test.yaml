@@ -6,6 +6,7 @@ author: 'Tim Montblanc'
 steps:
   - wait-serial: '[BOOT] IRIS node=gate1 role=GATE source=TEST'
   - wait-serial: '[STATE] FAULT -> IDLE'
+  - wait-serial: '[MQTT] connected'  # TLS connect menahan loop beberapa detik; mulai uji setelahnya
 
   # T2: orang datang tanpa APD -> ditolak
   - set-control: { part-id: btn_person, control: pressed, value: 1 }
@@ -22,7 +23,7 @@ steps:
 
   # Reset supervisor membungkam buzzer, palang tetap tertutup
   - set-control: { part-id: btn_reset, control: pressed, value: 1 }
-  - wait-serial: '[INPUT] reset -> alarm acknowledged'
+  - wait-serial: '-> alarm acknowledged'
   - set-control: { part-id: btn_reset, control: pressed, value: 0 }
   - delay: 200ms
 

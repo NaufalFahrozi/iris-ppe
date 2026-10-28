@@ -33,11 +33,16 @@ Kamera ─► Server vision (YOLO + tracking + aturan) ─► broker.hivemq.com 
 
 ## Cara menjalankan
 
-1. Salin `.env.example` menjadi `.env`, isi kredensial sendiri (jangan di-commit).
-2. Firmware: `cd firmware && pio run`, lalu simulasi `wokwi-cli` (butuh `WOKWI_CLI_TOKEN`).
-3. Python (vision, dashboard, training): buat venv dengan `uv venv --python 3.12` lalu `uv pip install -r requirements.txt`.
+1. Salin `.env.example` menjadi `.env`, isi `WOKWI_CLI_TOKEN` (MQTT sudah terisi untuk broker publik). Jangan di-commit.
+2. Python: `uv venv --python 3.12 .venv`, pasang PyTorch CUDA (`uv pip install --python .venv torch torchvision --torch-backend=auto`),
+   lalu `uv pip install --python .venv -r requirements.txt`.
+3. Firmware: `cd firmware && pio run`.
+4. Uji otomatis di Wokwi (dari root repo):
+   - Mode TEST (tombol): `.venv\Scripts\python firmware/test/run_tests.py`
+   - End-to-end MQTT (ESP32 mode LIVE ↔ broker ↔ Python): `.venv\Scripts\python firmware/test/mqtt_e2e.py gate` / `zone`
+5. Simulator server vision (tanpa kamera): `.venv\Scripts\python vision/sim_publisher.py --node gate1 --scenario demo`
 
-Detail tiap bagian akan ditambahkan seiring irisan selesai.
+Rancangan, GPIO, state machine, dan format MQTT: [docs/design.md](docs/design.md). Hasil uji: [docs/testing-log.md](docs/testing-log.md).
 
 ## Link
 

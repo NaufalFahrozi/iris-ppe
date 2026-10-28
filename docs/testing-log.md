@@ -29,6 +29,38 @@ disimulasikan tombol `PERSON/HELMET/VEST`. Ini menguji **logic ESP32**, belum pi
 Belum: **verifikasi visual rangkaian** di editor Wokwi (wajib menurut CLAUDE.md), dan T3 penuh (heartbeat berhenti
 setelah sempat aktif) yang menunggu irisan 2.
 
+## Irisan 2 — End-to-end MQTT (ESP32 LIVE ↔ broker.hivemq.com:8883 TLS ↔ Python)
+
+Dijalankan dengan `.venv\Scripts\python firmware/test/mqtt_e2e.py gate|zone` (2026-10-29). Python berperan sebagai
+server vision (heartbeat 1 Hz, detection 2 Hz) **tanpa kamera/YOLO**; ESP32 berjalan di Wokwi mode LIVE dan status
+balasannya dibaca kembali dari broker. Latency = publish detection → status ESP32 diterima kembali (dua kali lewat broker).
+
+| ID | Test Case | Input/Condition | Expected Result | Actual Result | Latency | Status |
+|---|---|---|---|---|---|---|
+| T1 | Satu orang, APD lengkap | detection 1 orang helmet+vest | GRANTED, palang terbuka, status terkirim | `state=GRANTED gate=open` | 0,78 s | Lulus |
+| T2 | Rompi tidak dipakai | 1 orang `vest=false` | DENIED, missing `[vest]` | `state=DENIED missing=['vest']` | 0,86 s | Lulus |
+| T3 | Server vision mati | heartbeat & detection dihentikan | FAULT, gerbang terkunci | `state=FAULT gate=closed` | 8,35 s* | Lulus |
+| T3b | Server pulih | heartbeat & detection kembali | Keluar FAULT, event `recovered` | `state=IDLE` | 1,09 s | Lulus |
+| T4 | Dua orang, satu tidak patuh | orang 2 `helmet=false` | Palang tetap tertutup | `state=DENIED persons=2` | 1,12 s | Lulus |
+| T5 | Pelanggar masuk saat palang terbuka | GRANTED lalu orang 2 tanpa rompi | Palang menutup + alarm | `GRANTED -> DENIED gate=closed` | 0,84 s | Lulus |
+| OV | Override reset dari dashboard | publish `{"cmd":"reset"}` saat DENIED | Buzzer dibungkam | log `reset (mqtt) -> alarm acknowledged` | – | Lulus |
+| T6a | Zona: helm dilepas | `helmet=false`, `violation_s` dari server | WARNING setelah ≥ 3 s | `state=WARNING` | 4,39 s | Lulus |
+| T6b | Zona: helm dilepas lama | `violation_s` terus naik | ALARM setelah ≥ 8 s + event `alarm` | `state=ALARM` | +5,13 s | Lulus |
+| T6c | Zona: patuh kembali | `helmet=true` | NORMAL otomatis + event `cleared` | `state=NORMAL` | 1,23 s | Lulus |
+
+\* Batas fail-safe 5 s diukur dalam waktu simulasi; Wokwi berjalan lebih lambat dari waktu nyata saat WiFi/TLS aktif,
+sehingga dari sisi Python terukur 8–13 s. Pada hardware nyata belum diukur.
+
+Bukti: `docs/assets/irisan2/e2e-gate.md`, `e2e-zone.md` (tabel + daftar event yang diterima), `e2e-*-serial.log`.
+
+Catatan: satu kali run gate gagal 0/9 karena simulasi Wokwi tidak berjalan (log serial kosong); penyebab tidak terekam
+karena output wokwi-cli saat itu tidak disimpan. Harness sekarang menyimpan output wokwi-cli dan berhenti jika simulasi
+mati. Run ulang pada firmware yang sama: 9/9 lulus.
+
+Regresi mode TEST (irisan 1) setelah kode jaringan ditambahkan: gate, zone, failsafe **lulus**. Ditemukan bahwa
+handshake TLS menahan `loop()` beberapa detik; scenario kini menunggu `[MQTT] connected` sebelum menekan tombol, dan
+handshake dibatasi 8 s (lihat `docs/design.md` bagian 5, keterbatasan).
+
 ## Skenario utama (T1–T6)
 
 | ID | Test Case | Input/Condition | Expected Result | Actual Result | Status | Bukti |

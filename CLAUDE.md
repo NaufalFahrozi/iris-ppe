@@ -243,7 +243,7 @@ Pemetaan GPIO ditentukan di `docs/design.md`. Pilih pin yang aman untuk ESP32 (h
 
 ---
 
-## 7. Topic dan payload MQTT (draft, final di irisan 2)
+## 7. Topic dan payload MQTT (final di irisan 2; rincian lengkap di `docs/design.md` bagian 5)
 
 | Topic | Arah | Contoh payload |
 |---|---|---|
@@ -377,7 +377,7 @@ Catat untuk setiap tes: Test Case, Input/Condition, Expected Result, Actual Resu
 - [x] 0. Setup & uji kelayakan Wokwi CLI (2026-10-29: repo, tools, uji Wokwi F0 lulus, uji TLS broker lulus, SH17 siap, training run `sh17-yolo26m` dimulai)
 - [x] 1. Rancangan dasar (draft `docs/design.md`; GPIO menunggu review Christian)
 - [ ] 2. Irisan 1 – Gerbang tanpa YOLO (logic gerbang+zona lulus 8 uji wokwi-cli I1-1..I1-8; **sisa: verifikasi visual rangkaian di Wokwi**)
-- [ ] 3. Irisan 2 – MQTT
+- [x] 3. Irisan 2 – MQTT (TLS + verifikasi CA, e2e via simulator Python: T1–T5 + override 9/9, T6 4/4 di Wokwi; T1–T6 dengan vision asli menunggu irisan 3/5)
 - [ ] 4. Irisan 3 – Vision
 - [ ] 5. Irisan 4 – Dashboard
 - [ ] 6. Irisan 5 – Monitoring

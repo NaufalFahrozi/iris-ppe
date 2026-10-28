@@ -50,3 +50,6 @@ Thumbs.db
 
 # Diagram varian hasil run_tests.py
 firmware/test/.diagram.generated.json
+
+# Output mentah wokwi-cli (duplikat log serial)
+docs/assets/**/*-wokwi-cli.log

@@ -147,20 +147,33 @@ menghitung sendiri sejak pelanggar pertama terlihat (fallback durasi level frame
 | `ZONE_ALARM_S` | 8 *(tuning)* | Batas eskalasi ke alarm |
 | `STATUS_PERIOD_MS` | 5000 | Publikasi status periodik |
 
-## 5. MQTT
+## 5. MQTT (final irisan 2)
 
-Broker `broker.hivemq.com:8883` (TLS), prefix `<prefix>` = `sic8-montblanc/iris`. Semua payload JSON dan selalu
-punya `ts` (detik Unix dari pengirim; ESP32 memakai waktu NTP). Detail final diisi di irisan 2.
+Broker `broker.hivemq.com:8883` (TLS). ESP32 memverifikasi sertifikat server dengan **Amazon Root CA 1**
+(`firmware/src/ca_cert.h`; rantai: `Amazon RSA 2048 M04` → `Amazon Root CA 1`), bukan `setInsecure()`.
+Prefix `<prefix>` = `sic8-montblanc/iris`. Semua payload JSON dan punya `ts` (detik Unix; ESP32 memakai NTP dan
+mengirim `0` sebelum jam tersinkron).
 
-| Topic | Arah | QoS | Payload |
+| Topic | Arah | QoS / retain | Payload |
 |---|---|---|---|
-| `<prefix>/<node>/detection` | server → ESP32, dashboard | 0 | `{"ts":1793210995,"person_count":2,"persons":[{"id":1,"helmet":true,"vest":true,"violation_s":0},{"id":2,"helmet":false,"vest":true,"violation_s":4.5}],"violators":[2]}` |
-| `<prefix>/<node>/status` | ESP32 → dashboard | 0 | `{"ts":...,"node":"gate1","mode":"gate","source":"live","state":"DENIED","gate":"closed","missing":["helmet"],"person_count":2}` |
-| `<prefix>/<node>/event` | ESP32 → dashboard | 1 | `{"ts":...,"node":"gate1","type":"denied","level":2,"person_id":2,"missing":["helmet"],"duration_s":0}` |
+| `<prefix>/<node>/detection` | server → ESP32, dashboard | 0 | `{"ts":1793210995.2,"person_count":2,"persons":[{"id":1,"helmet":true,"vest":true,"violation_s":0.0},{"id":2,"helmet":false,"vest":true,"violation_s":4.5}],"violators":[2]}` |
+| `<prefix>/<node>/status` | ESP32 → dashboard | 0 / **retain** | `{"ts":...,"node":"gate1","mode":"gate","source":"live","state":"DENIED","gate":"closed","missing":["helmet"],"person_count":2,"violation_s":0.0}` |
+| `<prefix>/<node>/event` | ESP32 → dashboard | 0 | `{"ts":...,"node":"gate1","type":"denied","level":2,"missing":["helmet"],"person_count":2,"duration_s":0.0}` |
 | `<prefix>/<node>/override` | dashboard/supervisor → ESP32 | 1 | `{"cmd":"reset"}` |
-| `<prefix>/server/heartbeat` | server → ESP32 | 0 | `{"ts":...,"fps":24.5}` |
+| `<prefix>/server/heartbeat` | server → ESP32 | 0 | `{"ts":...,"fps":24.5,"source":"vision"}` |
 
-`<node>`: `gate1`, `zoneA`. `type` event: `granted`, `denied`, `warning`, `alarm`, `cleared`, `fault`, `recovered`.
+- `<node>`: `gate1`, `zoneA`. `type` event: `granted`, `denied`, `warning`, `alarm`, `cleared`, `fault`, `recovered`;
+  `level`: 0 info, 1 peringatan, 2 pelanggaran, 3 gangguan.
+- Server mengirim `detection` ±2 Hz dan `heartbeat` 1 Hz. ESP32 masuk `FAULT` bila salah satunya berhenti
+  > `FAILSAFE_TIMEOUT_MS`.
+- ESP32 publish `status` saat state/APD berubah dan tiap `STATUS_PERIOD_MS`. *Last Will* broker:
+  `{"node":"gate1","state":"OFFLINE"}` (retain) jika ESP32 putus tidak wajar.
+- ESP32 memakai PubSubClient, yang hanya bisa publish QoS 0; karena itu `event` QoS 0.
+- `vision/iris_mqtt.py` = modul koneksi Python bersama; `vision/sim_publisher.py` = simulator server vision.
+
+**Keterbatasan diketahui:** saat (re)connect TLS, `loop()` tertahan beberapa detik (handshake dibatasi 8 s). Selama itu
+aktuator mempertahankan state terakhir. Pada mode LIVE durasi pelanggaran dihitung server, jadi timer zona tidak
+terpengaruh; pada mode TEST timer lokal ikut berjalan.
 
 ## 6. Format log Serial
 

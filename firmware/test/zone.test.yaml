@@ -7,6 +7,7 @@ author: 'Tim Montblanc'
 steps:
   - wait-serial: '[BOOT] IRIS node=zoneA role=ZONE source=TEST'
   - wait-serial: '[STATE] FAULT -> NORMAL'
+  - wait-serial: '[MQTT] connected'  # TLS connect menahan loop beberapa detik; mulai uji setelahnya
 
   # Pekerja patuh di zona
   - set-control: { part-id: btn_person, control: pressed, value: 1 }
