@@ -69,7 +69,7 @@ Ideasi → device discovery → hardware design → programming → communicatio
 | B. Device & hardware discovery | ESP32 controller utama; ≥1 input; ≥1 output; identifikasi GPIO; daftar komponen + alasan; dapat disimulasikan di Wokwi | Bagian 5 dan `docs/design.md` |
 | C. Arsitektur & wiring | Block diagram Input → ESP32/Logic → Output, ditambah Communication → MQTT/Broker → Application/Dashboard; wiring di Wokwi; jelaskan power, GPIO, ground, koneksi antarperangkat | `docs/design.md`, `firmware/diagram.json` |
 | D. Programming & logic | Program ESP32 (Arduino IDE/PlatformIO); baca input → hasilkan output; logic sesuai use case; Serial Monitor untuk debugging; testing & debugging | `firmware/` |
-| E. Communication | Serial untuk memahami aliran data; MQTT via **HiveMQ Cloud**; topic & payload konsisten | Bagian 7 |
+| E. Communication | Serial untuk memahami aliran data; MQTT via **HiveMQ Cloud**; topic & payload konsisten | Bagian 7. Broker: **HiveMQ public broker** (`broker.hivemq.com`, TLS 8883), karena paket gratis HiveMQ Cloud Serverless sudah ditutup untuk pengguna baru (lihat bagian 5, "Broker MQTT") |
 | F. Visualization | Python + paho-mqtt; Colab/IDE Python; **Plotly atau Matplotlib**; minimal tampilkan data/status/trend | `dashboard/` |
 | G. Testing | ≥3 skenario; kondisi normal dan abnormal; catat Input, Expected, Actual, Status; bukti screenshot/video | `docs/testing-log.md` |
 
@@ -82,7 +82,7 @@ Ideasi → device discovery → hardware design → programming → communicatio
 - Serial Monitor sebagai media debugging/data output
 - Dokumentasi wiring dan logic
 
-Fitur rekomendasi yang **diambil semua** oleh IRIS: MQTT + HiveMQ Cloud, Python + paho-mqtt, dashboard Plotly, serta OLED/servo/buzzer.
+Fitur rekomendasi yang **diambil semua** oleh IRIS: MQTT + broker HiveMQ (public broker, lihat bagian 5), Python + paho-mqtt, dashboard Plotly, serta OLED/servo/buzzer.
 
 ### 3.5 Dokumentasi akhir (deliverable)
 1. Laporan **.docx** (tanpa slide/presentasi)
@@ -166,7 +166,7 @@ Kamera zona ────┼─► Server vision terpusat (laptop, GPU RTX 4050)
                 │     YOLO + tracking + aturan kepatuhan
                 │              │
                 │              ▼  publish
-                │        HiveMQ Cloud (MQTT broker)
+                │   HiveMQ public broker (MQTT, TLS 8883)
                 │       │            │             │
                 ▼       ▼            ▼             ▼
             ESP32 gerbang      ESP32 zona     Dashboard Python
@@ -193,6 +193,7 @@ Kamera zona ────┼─► Server vision terpusat (laptop, GPU RTX 4050)
 - **Fail-safe:** server vision mengirim heartbeat. Kalau heartbeat atau pesan berhenti melewati batas waktu, ESP32 masuk mode aman (gerbang terkunci, indikator gangguan aktif).
 - **Mode uji standalone:** tombol/switch di Wokwi mensimulasikan hasil deteksi, sehingga seluruh logic ESP32 bisa diuji tanpa YOLO.
 - **Serial Monitor:** firmware mencetak log terstruktur (koneksi WiFi/MQTT, payload diterima, transisi state, aksi aktuator). Ini bukti untuk rubrik Serial dan Debugging.
+- **Broker MQTT (diputuskan 2026-10-29):** pakai **HiveMQ public broker** `broker.hivemq.com` port **8883 (TLS)**, tanpa username/password. Alasan: paket gratis HiveMQ Cloud Serverless sudah tidak bisa dibuat pengguna baru (dipensiunkan 31 Des 2026); Starter hanya trial 15 hari dan meminta kartu, sehingga link Wokwi dan bukti laporan bisa mati setelah trial. Konsekuensi yang ditulis di laporan: broker publik tanpa autentikasi (siapa pun yang tahu topic bisa membaca/mengirim pesan), tanpa SLA. Topic memakai prefix unik untuk menghindari tabrakan, bukan sebagai pengaman. Host, port, kredensial, dan prefix dibaca dari konfigurasi (`.env`) agar bisa pindah ke HiveMQ Cloud ber-autentikasi tanpa ubah logika.
 - **Privasi:** tanpa face recognition, tanpa menyimpan video. Hanya event dan angka yang dikirim.
 - **Keterbatasan yang diakui di laporan:** tailgating tidak 100% tertutup; akurasi bergantung pada cahaya, sudut, oklusi, dan kerumunan; kapasitas satu GPU terbatas; server terpusat adalah titik tunggal kegagalan. Sistem diposisikan sebagai alat bantu pengawasan, bukan pengganti prosedur K3.
 
@@ -240,13 +241,13 @@ Pemetaan GPIO ditentukan di `docs/design.md`. Pilih pin yang aman untuk ESP32 (h
 
 | Topic | Arah | Contoh payload |
 |---|---|---|
-| `iris/<node>/detection` | server → ESP32, dashboard | `{"ts":..., "person_count":2, "persons":[{"id":1,"helmet":true,"vest":true},{"id":2,"helmet":false,"vest":true}], "violators":[2]}` |
-| `iris/<node>/status` | ESP32 → dashboard | `{"ts":..., "mode":"gate", "state":"DENIED", "gate":"closed", "missing":["helmet"]}` |
-| `iris/<node>/event` | ESP32 → dashboard | `{"ts":..., "type":"alarm", "level":2, "person_id":2, "duration_s":12}` |
-| `iris/<node>/override` | dashboard/supervisor → ESP32 | `{"cmd":"reset"}` |
-| `iris/server/heartbeat` | server → ESP32 | `{"ts":...}` |
+| `<prefix>/<node>/detection` | server → ESP32, dashboard | `{"ts":..., "person_count":2, "persons":[{"id":1,"helmet":true,"vest":true},{"id":2,"helmet":false,"vest":true}], "violators":[2]}` |
+| `<prefix>/<node>/status` | ESP32 → dashboard | `{"ts":..., "mode":"gate", "state":"DENIED", "gate":"closed", "missing":["helmet"]}` |
+| `<prefix>/<node>/event` | ESP32 → dashboard | `{"ts":..., "type":"alarm", "level":2, "person_id":2, "duration_s":12}` |
+| `<prefix>/<node>/override` | dashboard/supervisor → ESP32 | `{"cmd":"reset"}` |
+| `<prefix>/server/heartbeat` | server → ESP32 | `{"ts":...}` |
 
-`<node>` contoh: `gate1`, `zoneA`. Semua payload JSON, field konsisten, timestamp selalu ada.
+`<prefix>` default `sic8-montblanc/iris` (env `MQTT_TOPIC_PREFIX`), wajib karena broker publik dipakai bersama. `<node>` contoh: `gate1`, `zoneA`. Semua payload JSON, field konsisten, timestamp selalu ada.
 
 ---
 
@@ -277,8 +278,8 @@ iris-ppe/
 - Simulasi lokal memakai `wokwi-cli` dengan token dari dashboard Wokwi CI di environment variable `WOKWI_CLI_TOKEN`. `wokwi-cli` punya mode MCP (eksperimental) untuk integrasi agent. Cek dokumentasi resmi untuk detail dan kuota sebelum mengandalkannya.
 - `firmware/wokwi.toml` menunjuk ke firmware hasil build PlatformIO (`.bin`/`.elf`).
 - Manfaatkan `--serial-log-file`, `--screenshot-*`, dan scenario file untuk pengujian otomatis dan bukti laporan.
-- ESP32 di Wokwi terhubung internet lewat WiFi virtual `Wokwi-GUEST` (tanpa password). **Uji koneksi TLS ke HiveMQ Cloud (port 8883) sedini mungkin.**
-- **Link proyek Wokwi untuk pengumpulan harus berupa proyek di wokwi.com.** Jaga agar sketch bisa dikompilasi di sana: siapkan versi `sketch.ino`, `diagram.json`, dan `libraries.txt`, lalu uji di wokwi.com sebelum pengumpulan. Kredensial di proyek publik wokwi.com harus berupa kredensial khusus demo yang bisa dicabut.
+- ESP32 di Wokwi terhubung internet lewat WiFi virtual `Wokwi-GUEST` (tanpa password). **Uji koneksi TLS ke broker HiveMQ (`broker.hivemq.com:8883`) sedini mungkin.**
+- **Link proyek Wokwi untuk pengumpulan harus berupa proyek di wokwi.com.** Jaga agar sketch bisa dikompilasi di sana: siapkan versi `sketch.ino`, `diagram.json`, dan `libraries.txt`, lalu uji di wokwi.com sebelum pengumpulan. Dengan broker publik tidak ada kredensial MQTT; jika kelak pindah ke broker ber-autentikasi, kredensial di proyek publik wokwi.com harus khusus demo dan bisa dicabut.
 - Rangkaian buatan agent **wajib diverifikasi visual** di Wokwi sebelum dianggap benar.
 
 ---
@@ -310,7 +311,7 @@ Kerjakan dalam irisan tipis. Setiap irisan: kerjakan → uji → catat di `docs/
 0. **Setup & uji kelayakan:** struktur repo, `.gitignore`, `.env.example`, README awal. Jalankan sketch ESP32 + LED + tombol lewat `wokwi-cli` dan pastikan log serial terbaca.
 1. **Rancangan dasar:** komponen + alasan, GPIO, block diagram, state machine, format MQTT di `docs/design.md`.
 2. **Irisan 1 – Gerbang tanpa YOLO:** ESP32 di Wokwi, tombol sebagai hasil deteksi, servo, LED, buzzer, OLED, log Serial.
-3. **Irisan 2 – MQTT:** koneksi ESP32 ↔ HiveMQ Cloud, topic/payload final, uji dengan publisher Python sederhana.
+3. **Irisan 2 – MQTT:** koneksi ESP32 ↔ broker HiveMQ (TLS 8883), topic/payload final, uji dengan publisher Python sederhana.
 4. **Irisan 3 – Vision:** inferensi YOLO + aturan kepatuhan, publish ke MQTT.
 5. **Irisan 4 – Dashboard:** paho-mqtt + Plotly (status terkini, pelanggaran per waktu, compliance rate).
 6. **Irisan 5 – Monitoring:** tracking, eskalasi durasi, fail-safe heartbeat.

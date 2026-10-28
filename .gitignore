@@ -44,3 +44,6 @@ wokwi-screenshot*.png
 Thumbs.db
 .claude/autoharness/
 .claude/settings.local.json
+
+# Unduhan parsial
+*.part

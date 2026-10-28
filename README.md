@@ -3,7 +3,7 @@
 Proyek tugas akhir *Selection Phase 2 – IoT: Device and Hardware Discovery*, **Samsung Innovation Campus Batch 8** (jalur IoT).
 Tim **Montblanc**, Universitas Mulawarman.
 
-IRIS memeriksa kepatuhan Alat Pelindung Diri (APD) / *Personal Protective Equipment* (PPE) — helm dan rompi — memakai computer vision (YOLO), lalu mengirim hasilnya lewat MQTT (HiveMQ Cloud) ke ESP32 yang menggerakkan palang gerbang, LED, buzzer, dan OLED. Data kepatuhan ditampilkan di dashboard Python (paho-mqtt + Plotly).
+IRIS memeriksa kepatuhan Alat Pelindung Diri (APD) / *Personal Protective Equipment* (PPE) — helm dan rompi — memakai computer vision (YOLO), lalu mengirim hasilnya lewat MQTT (HiveMQ public broker, TLS) ke ESP32 yang menggerakkan palang gerbang, LED, buzzer, dan OLED. Data kepatuhan ditampilkan di dashboard Python (paho-mqtt + Plotly).
 
 Dua mode:
 
@@ -15,7 +15,7 @@ Dua mode:
 ## Arsitektur singkat
 
 ```
-Kamera ─► Server vision (YOLO + tracking + aturan) ─► HiveMQ Cloud (MQTT)
+Kamera ─► Server vision (YOLO + tracking + aturan) ─► broker.hivemq.com (MQTT, TLS 8883)
                                                       ├─► ESP32 gerbang (servo, LED, buzzer, OLED, tombol)
                                                       ├─► ESP32 zona (LED, buzzer, OLED)
                                                       └─► Dashboard Python (paho-mqtt + Plotly)
