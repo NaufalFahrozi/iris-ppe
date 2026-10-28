@@ -1,0 +1,8 @@
+# Python deps untuk vision, dashboard, dan training.
+# PyTorch CUDA dipasang terpisah (lihat README), lalu:
+#   uv pip install -r requirements.txt
+ultralytics
+paho-mqtt>=2.0
+plotly
+python-dotenv
+kagglehub

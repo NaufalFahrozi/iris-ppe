@@ -1,0 +1,46 @@
+# Secrets
+.env
+*.env.local
+firmware/src/secrets.h
+firmware/sketch/secrets.h
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# PlatformIO / build
+.pio/
+.vscode/
+build/
+
+# Datasets & training outputs
+/datasets/
+runs/
+*.cache
+
+# Model weights
+*.pt
+*.pth
+*.onnx
+*.engine
+*.torchscript
+
+# Media mentah
+*.mp4
+*.avi
+*.mov
+*.mkv
+!docs/assets/*.gif
+
+# Wokwi CLI output
+*.serial.log
+wokwi-screenshot*.png
+
+# OS / editor / agent
+.DS_Store
+Thumbs.db
+.claude/autoharness/
+.claude/settings.local.json
