@@ -219,6 +219,12 @@ Kamera zona ────┼─► Server vision terpusat (laptop, GPU RTX 4050)
 3. Training berjalan di background sementara irisan 0–2 dikerjakan. Sampai model siap, pipeline vision dikembangkan memakai bobot COCO (`person`) atau mode uji.
 4. Simpan metrik (mAP50, mAP50-95 per kelas, confusion matrix, FPS) ke `docs/assets/` untuk laporan.
 
+Hasil langkah 0 (2026-10-29):
+- Probe `yolo26m`, imgsz 640: AutoBatch memilih batch 3 (VRAM ~2,1 GB dari 6 GB), **1 epoch = 420 detik** termasuk validasi.
+- Uji batch 8 membuat laptop **mati mendadak** saat validasi (Kernel-Power 41 tanpa bugcheck; log juga mencatat charger putus-sambung). Penyebab pasti belum diketahui (daya/panas atau charger).
+- Keputusan: run penuh memakai **batch 4, workers 4**, `--time 14`, `patience 20`, max 100 epoch, dengan `training/gpu_log.ps1` mencatat suhu/daya GPU dan `--resume` jika terputus. Laptop harus tercolok charger dengan kabel yang kencang.
+- Statistik subset SH17-IRIS: `safety-vest` hanya 168 gambar train (433 instance), `helmet` 373 gambar. Run pertama tetap SH17 saja; Construction-PPE dipertimbangkan untuk fine-tune kedua jika AP rompi/helm lemah (keputusan dataset didelegasikan ke agent oleh ketua).
+
 ---
 
 ## 6. Komponen awal (stage 2, Wokwi)
@@ -368,7 +374,7 @@ Catat untuk setiap tes: Test Case, Input/Condition, Expected Result, Actual Resu
 
 ## 15. Status
 
-- [ ] 0. Setup & uji kelayakan Wokwi CLI
+- [x] 0. Setup & uji kelayakan Wokwi CLI (2026-10-29: repo, tools, uji Wokwi F0 lulus, uji TLS broker lulus, SH17 siap, training run `sh17-yolo26m` dimulai)
 - [ ] 1. Rancangan dasar
 - [ ] 2. Irisan 1 – Gerbang tanpa YOLO
 - [ ] 3. Irisan 2 – MQTT
