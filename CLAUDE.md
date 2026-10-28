@@ -210,7 +210,8 @@ Kamera zona ────┼─► Server vision terpusat (laptop, GPU RTX 4050)
   - Gambar beresolusi tinggi: pertimbangkan resize offline agar loading tidak jadi bottleneck.
   - **Lisensi CC BY-NC-SA 4.0** (non-komersial, share-alike). Cantumkan atribusi dan sitasi di README dan laporan. Jika IRIS kelak dikomersialkan, dataset harus diganti.
 - **Pendamping (opsional): Ultralytics Construction-PPE** (1.416 gambar, 11 kelas, AGPL-3.0, unduh otomatis). Skemanya berbeda (punya kelas negatif seperti `no_helmet`, tidak ada `no_vest`), jadi tidak digabung di run pertama.
-- **Data rekaman tim** (helm proyek dan rompi tersedia): rekam di lokasi demo, dipakai sebagai **test set lokal** untuk evaluasi kondisi nyata dan bahan video demo. Dilabel untuk training hanya jika waktu cukup.
+- **Data rekaman tim: tidak tersedia** (dikonfirmasi ketua 2026-10-29). Sebagai gantinya, test set = split test publik yang tidak dipakai training (CPPE test, CSS test, SHRJ test 600, HHV test 1.000). Uji kondisi nyata dilakukan langsung di depan kamera saat demo; dicatat sebagai keterbatasan di laporan.
+- **Dataset tambahan run 3 (diputuskan agent atas mandat ketua):** Construction Site Safety (Roboflow via Kaggle, CC BY 4.0), Safety Helmet & Reflective Jacket (Apache 2.0, subset 4.000), HardHat-Vest v3 (CC0, subset 6.000 dengan prioritas gambar berompi). Kelas person/head yang tidak dilabeli diisi pseudo-label (`training/prepare_extra.py`); gambar pseudo-label yang kemungkinan banyak orang tak berlabel dibuang dari train (`training/build_merged.py`). Catatan: kotak helm di HardHat-Vest membungkus seluruh kepala (SH17 hanya helm), sehingga mAP50-95 helm bisa sedikit terpengaruh. Total train 17.313 gambar (rompi 13,6 ribu instance).
 - **Fallback:** bobot pretrained yang dirilis penulis SH17, jika training gagal atau terlambat. Cek format kelas dan lisensinya.
 
 ### 5.3 Prosedur training
@@ -233,7 +234,11 @@ Run 2 `merged-yolo26m` (dimulai 2026-10-29 04:13): data **SH17-IRIS + Constructi
 (`training/prepare_cppe.py`: Person→person, no_helmet→head, helmet→helmet, vest→safety-vest; kepala berhelm yang tidak
 berlabel di Construction-PPE diisi **pseudo-label** dari model run 1, conf ≥ 0,5). Rompi train naik 433 → 1.702 instance,
 helm 773 → 2.114. Fine-tune dari `last.pt` run 1, AdamW lr0 0,0005, cos LR, warmup 1, `patience 30`, `--time 6`,
-batch 4. Metrik utama yang dilaporkan: val SH17 (bebas pseudo-label) + val gabungan.
+batch 4. Metrik utama yang dilaporkan: val SH17 (bebas pseudo-label) + val gabungan. Dihentikan di epoch 10
+(mAP50 val gabungan 0,804) untuk diganti run 3.
+
+Run 3 `all-yolo26m` (mulai 2026-10-29 05:21): `datasets/iris-all.yaml` (5 sumber), dari best run 2, AdamW lr0 0,0005,
+cos LR, warmup 1, maks 40 epoch, `patience 25`, `--time 7`, batch 4.
 
 ---
 
