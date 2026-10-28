@@ -305,8 +305,8 @@ iris-ppe/
 ## 11. Hal yang masih terbuka
 
 - Ukuran model final (`yolo26m` vs `yolo26s`), diputuskan dari hasil training dan FPS
-- Nilai ambang eskalasi dan timeout fail-safe
-- Pemetaan GPIO final
+- Nilai ambang eskalasi dan timeout fail-safe (nilai awal di `firmware/src/config.h`: warn 3 s, alarm 8 s, fail-safe 5 s, jendela buka 5 s)
+- Pemetaan GPIO final (draft di `docs/design.md` bagian 3, menunggu review Christian dan verifikasi visual)
 
 ---
 
@@ -375,8 +375,8 @@ Catat untuk setiap tes: Test Case, Input/Condition, Expected Result, Actual Resu
 ## 15. Status
 
 - [x] 0. Setup & uji kelayakan Wokwi CLI (2026-10-29: repo, tools, uji Wokwi F0 lulus, uji TLS broker lulus, SH17 siap, training run `sh17-yolo26m` dimulai)
-- [ ] 1. Rancangan dasar
-- [ ] 2. Irisan 1 – Gerbang tanpa YOLO
+- [x] 1. Rancangan dasar (draft `docs/design.md`; GPIO menunggu review Christian)
+- [ ] 2. Irisan 1 – Gerbang tanpa YOLO (logic gerbang+zona lulus 8 uji wokwi-cli I1-1..I1-8; **sisa: verifikasi visual rangkaian di Wokwi**)
 - [ ] 3. Irisan 2 – MQTT
 - [ ] 4. Irisan 3 – Vision
 - [ ] 5. Irisan 4 – Dashboard

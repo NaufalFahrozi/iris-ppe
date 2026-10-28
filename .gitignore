@@ -47,3 +47,6 @@ Thumbs.db
 
 # Unduhan parsial
 *.part
+
+# Diagram varian hasil run_tests.py
+firmware/test/.diagram.generated.json

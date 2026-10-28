@@ -1,0 +1,56 @@
+﻿name: 'IRIS gate mode (TEST source): T1, T2, T5, window, reset'
+version: 1
+author: 'Tim Montblanc'
+
+# Tombol uji = toggle saat DITEKAN. Pola: tekan -> tunggu log -> lepas -> jeda.
+steps:
+  - wait-serial: '[BOOT] IRIS node=gate1 role=GATE source=TEST'
+  - wait-serial: '[STATE] FAULT -> IDLE'
+
+  # T2: orang datang tanpa APD -> ditolak
+  - set-control: { part-id: btn_person, control: pressed, value: 1 }
+  - wait-serial: '[STATE] IDLE -> DENIED missing=helmet,vest'
+  - set-control: { part-id: btn_person, control: pressed, value: 0 }
+  - delay: 500ms
+  - take-screenshot: { part-id: oled1, save-to: '../../docs/assets/irisan1/oled-gate-denied.png' }
+
+  # Pakai helm -> masih kurang rompi
+  - set-control: { part-id: btn_helmet, control: pressed, value: 1 }
+  - wait-serial: '[STATE] DENIED missing=vest'
+  - set-control: { part-id: btn_helmet, control: pressed, value: 0 }
+  - delay: 200ms
+
+  # Reset supervisor membungkam buzzer, palang tetap tertutup
+  - set-control: { part-id: btn_reset, control: pressed, value: 1 }
+  - wait-serial: '[INPUT] reset -> alarm acknowledged'
+  - set-control: { part-id: btn_reset, control: pressed, value: 0 }
+  - delay: 200ms
+
+  # T1: APD lengkap -> palang terbuka, LED hijau
+  - set-control: { part-id: btn_vest, control: pressed, value: 1 }
+  - wait-serial: '[STATE] DENIED -> GRANTED'
+  - set-control: { part-id: btn_vest, control: pressed, value: 0 }
+  - delay: 500ms
+  - expect-pin: { part-id: esp, pin: '25', value: 1 }
+  - take-screenshot: { part-id: oled1, save-to: '../../docs/assets/irisan1/oled-gate-granted.png' }
+
+  # T5: saat palang terbuka, pelanggar muncul (rompi dilepas) -> palang menutup + alarm
+  - set-control: { part-id: btn_vest, control: pressed, value: 1 }
+  - wait-serial: '[STATE] GRANTED -> DENIED missing=vest'
+  - set-control: { part-id: btn_vest, control: pressed, value: 0 }
+  - delay: 300ms
+  - expect-pin: { part-id: esp, pin: '27', value: 1 }
+
+  # Jendela buka terbatas: palang menutup sendiri setelah OPEN_WINDOW_MS, dibuka lagi setelah jeda
+  - set-control: { part-id: btn_vest, control: pressed, value: 1 }
+  - wait-serial: '[STATE] DENIED -> GRANTED'
+  - set-control: { part-id: btn_vest, control: pressed, value: 0 }
+  - wait-serial: '[STATE] GRANTED -> IDLE'
+  - wait-serial: '[STATE] IDLE -> GRANTED'
+  - delay: 200ms
+
+  # Orang pergi -> IDLE, palang tertutup
+  - set-control: { part-id: btn_person, control: pressed, value: 1 }
+  - wait-serial: '[STATE] GRANTED -> IDLE'
+  - set-control: { part-id: btn_person, control: pressed, value: 0 }
+  - delay: 200ms

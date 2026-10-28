@@ -1,0 +1,12 @@
+name: 'IRIS fail-safe (LIVE source, no vision data): gate stays locked'
+version: 1
+author: 'Tim Montblanc'
+
+# Dijalankan dengan diagram varian SOURCE=LIVE (lihat run_tests.py).
+# Belum ada MQTT di irisan 1, jadi tidak ada data vision -> harus tetap FAULT.
+steps:
+  - wait-serial: '[BOOT] IRIS node=gate1 role=GATE source=LIVE'
+  - wait-serial: '"state":"FAULT","gate":"closed"'
+  - delay: 1000ms
+  - take-screenshot: { part-id: oled1, save-to: '../../docs/assets/irisan1/oled-gate-fault.png' }
+  - wait-serial: '"state":"FAULT","gate":"closed"'

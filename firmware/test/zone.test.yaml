@@ -1,0 +1,52 @@
+﻿name: 'IRIS zone mode (TEST source): T6 escalation and auto reset'
+version: 1
+author: 'Tim Montblanc'
+
+# Dijalankan dengan diagram varian ROLE=ZONE (lihat run_tests.py).
+# Pola tombol: tekan -> tunggu log -> lepas -> jeda.
+steps:
+  - wait-serial: '[BOOT] IRIS node=zoneA role=ZONE source=TEST'
+  - wait-serial: '[STATE] FAULT -> NORMAL'
+
+  # Pekerja patuh di zona
+  - set-control: { part-id: btn_person, control: pressed, value: 1 }
+  - wait-serial: '[INPUT] person=1 helmet=0 vest=0'
+  - set-control: { part-id: btn_person, control: pressed, value: 0 }
+  - delay: 200ms
+  - set-control: { part-id: btn_helmet, control: pressed, value: 1 }
+  - wait-serial: '[INPUT] person=1 helmet=1 vest=0'
+  - set-control: { part-id: btn_helmet, control: pressed, value: 0 }
+  - delay: 200ms
+  - set-control: { part-id: btn_vest, control: pressed, value: 1 }
+  - wait-serial: '[STATE] NORMAL missing=-'
+  - set-control: { part-id: btn_vest, control: pressed, value: 0 }
+  - delay: 200ms
+
+  # Helm dilepas sebentar (< ZONE_WARN_S) -> diabaikan, tetap NORMAL
+  - set-control: { part-id: btn_helmet, control: pressed, value: 1 }
+  - wait-serial: '[STATE] NORMAL missing=helmet'
+  - set-control: { part-id: btn_helmet, control: pressed, value: 0 }
+  - delay: 1500ms
+  - set-control: { part-id: btn_helmet, control: pressed, value: 1 }
+  - wait-serial: '[STATE] NORMAL missing=-'
+  - set-control: { part-id: btn_helmet, control: pressed, value: 0 }
+  - delay: 200ms
+
+  # T6: helm dilepas lama -> WARNING -> ALARM
+  - set-control: { part-id: btn_helmet, control: pressed, value: 1 }
+  - wait-serial: '[STATE] NORMAL missing=helmet'
+  - set-control: { part-id: btn_helmet, control: pressed, value: 0 }
+  - wait-serial: '[STATE] NORMAL -> WARNING missing=helmet'
+  - delay: 300ms
+  - expect-pin: { part-id: esp, pin: '26', value: 1 }
+  - take-screenshot: { part-id: oled1, save-to: '../../docs/assets/irisan1/oled-zone-warning.png' }
+  - wait-serial: '[STATE] WARNING -> ALARM missing=helmet'
+  - delay: 300ms
+  - expect-pin: { part-id: esp, pin: '27', value: 1 }
+  - take-screenshot: { part-id: oled1, save-to: '../../docs/assets/irisan1/oled-zone-alarm.png' }
+
+  # Patuh kembali -> reset otomatis
+  - set-control: { part-id: btn_helmet, control: pressed, value: 1 }
+  - wait-serial: '[STATE] ALARM -> NORMAL'
+  - set-control: { part-id: btn_helmet, control: pressed, value: 0 }
+  - wait-serial: '[EVENT] node=zoneA type=cleared'

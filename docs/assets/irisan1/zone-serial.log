@@ -1,0 +1,31 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+[BOOT] IRIS node=zoneA role=ZONE source=TEST[STATE] FAULT -> NORMAL missing=- persons=0
+[EVENT] node=zoneA type=recovered missing=- persons=0 duration_s=0.0
+[STATUS] {"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":"-","person_count":0}
+[INPUT] person=1 helmet=0 vest=0[STATE] NORMAL missing=helmet,vest
+[INPUT] person=1 helmet=1 vest=0[STATE] NORMAL missing=vest
+[INPUT] person=1 helmet=1 vest=1
+[STATE] NORMAL missing=-[INPUT] person=1 helmet=0 vest=1
+[STATE] NORMAL missing=helmet[INPUT] person=1 helmet=1 vest=1
+[STATE] NORMAL missing=-[INPUT] person=1 helmet=0 vest=1
+[STATE] NORMAL missing=helmet[STATUS] {"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":"helmet","person_count":1}
+[STATE] NORMAL -> WARNING missing=helmet persons=1
+[EVENT] node=zoneA type=warning missing=helmet persons=1 duration_s=3.0
+[STATUS] {"node":"zoneA","mode":"zone","source":"test","state":"WARNING","gate":"closed","missing":"helmet","person_count":1}
+[STATUS] {"node":"zoneA","mode":"zone","source":"test","state":"WARNING","gate":"closed","missing":"helmet","person_count":1}
+[STATE] WARNING -> ALARM missing=helmet persons=1
+[EVENT] node=zoneA type=alarm missing=helmet persons=1 duration_s=8.0
+[STATUS] {"node":"zoneA","mode":"zone","source":"test","state":"ALARM","gate":"closed","missing":"helmet","person_count":1}
+[INPUT] person=1 helmet=1 vest=1
+[STATE] ALARM -> NORMAL missing=- persons=1
+[EVENT] node=zoneA type=cleared
