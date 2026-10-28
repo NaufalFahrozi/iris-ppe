@@ -61,6 +61,23 @@ Regresi mode TEST (irisan 1) setelah kode jaringan ditambahkan: gate, zone, fail
 handshake TLS menahan `loop()` beberapa detik; scenario kini menunggu `[MQTT] connected` sebelum menekan tombol, dan
 handshake dibatasi 8 s (lihat `docs/design.md` bagian 5, keterbatasan).
 
+## Irisan 4 — Dashboard (Plotly Dash)
+
+Diuji 2026-10-29 dengan dua ESP32 di Wokwi (gate1 & zoneA, mode LIVE) + `vision/sim_publisher.py` sebagai server vision,
+lewat broker.hivemq.com. Dashboard: `.venv\Scripts\python dashboard/app.py`.
+
+| ID | Test Case | Input/Condition | Expected Result | Actual Result | Status | Bukti |
+|---|---|---|---|---|---|---|
+| D1 | Status node live | 2 node ESP32 publish status | Kartu gate1/zoneA menampilkan state, palang, APD kurang, umur data | gate1 `GRANTED` (palang terbuka), zoneA `NORMAL`, sumber live | Lulus | `docs/assets/irisan4/dashboard-live-top.jpg` |
+| D2 | Compliance rate | detection 2 Hz dari simulator | Garis % orang patuh per 30 s + stat tile sesi | Grafik terisi; tile 43–44 % (sesuai skenario demo) | Lulus | `dashboard-compliance-chart.jpg` |
+| D3 | Pelanggaran per waktu | event `denied`/`alarm` dari ESP32 | Bar bertumpuk helm/rompi per 30 s | Bar muncul sesuai event | Lulus | `dashboard-live-top.jpg` |
+| D4 | Reset alarm dari dashboard | klik **Reset alarm** gate1 | Override `{"cmd":"reset"}` terkirim | Notifikasi "Perintah reset dikirim ke gate1"; penerimaan di ESP32 dibuktikan uji OV irisan 2 | Lulus | screenshot sesi, `docs/assets/irisan2/e2e-gate.md` |
+| D5 | Server vision berhenti | simulator dihentikan | Indikator "Server vision offline", node zona FAULT, event Gangguan | Sesuai | Lulus | `dashboard-fault-after-sim-stop.jpg` |
+
+Temuan saat uji: (1) tombol di kartu node sempat hilang-muncul tiap refresh sehingga klik bisa terlewat; diperbaiki
+dengan merender kerangka kartu sekali dan hanya memperbarui isinya. (2) Satu kali run demo kedua node Wokwi tidak
+berjalan (penyebab tidak terekam); run ulang dengan log wokwi-cli disimpan berjalan normal.
+
 ## Skenario utama (T1–T6)
 
 | ID | Test Case | Input/Condition | Expected Result | Actual Result | Status | Bukti |

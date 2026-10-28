@@ -27,6 +27,10 @@ def main() -> None:
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--fraction", type=float, default=1.0, help="porsi data train, untuk uji cepat")
     ap.add_argument("--name", default="sh17-yolo26m")
+    ap.add_argument("--optimizer", default="auto", help="mis. AdamW untuk melanjutkan fine-tune")
+    ap.add_argument("--lr0", type=float, default=None, help="learning rate awal (abaikan jika optimizer=auto)")
+    ap.add_argument("--warmup", type=float, default=3.0, help="warmup_epochs")
+    ap.add_argument("--cos-lr", action="store_true")
     ap.add_argument("--resume", action="store_true", help="lanjutkan run --name dari last.pt (mis. setelah laptop mati)")
     args = ap.parse_args()
 
@@ -47,7 +51,12 @@ def main() -> None:
         name=args.name,
         exist_ok=True,
         plots=True,
+        optimizer=args.optimizer,
+        warmup_epochs=args.warmup,
+        cos_lr=args.cos_lr,
     )
+    if args.lr0 is not None:
+        train_kwargs["lr0"] = args.lr0
     if args.time:
         train_kwargs["time"] = args.time
     model.train(**train_kwargs)

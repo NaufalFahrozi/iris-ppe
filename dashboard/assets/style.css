@@ -1,0 +1,81 @@
+﻿/* IRIS dashboard - token warna dari palet referensi dataviz */
+:root {
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --border: rgba(11, 11, 11, 0.10);
+  --good: #0ca30c;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+  --neutral: #898781;
+  --accent: #2a78d6;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.page { max-width: 1280px; margin: 0 auto; padding: 20px 16px 40px; }
+
+.header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.header h1 { display: inline; margin: 0 10px 0 0; font-size: 28px; letter-spacing: 0.04em; }
+.subtitle { color: var(--ink-2); font-size: 14px; }
+.conn { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.pill { padding: 4px 10px; border-radius: 999px; font-size: 13px; border: 1px solid var(--border); background: var(--surface); }
+.pill-good { color: #006300; }
+.pill-critical { color: var(--critical); }
+.pill-serious { color: #a8461f; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); gap: 12px; margin-bottom: 16px; }
+.tile, .card, .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.tile-label { color: var(--ink-2); font-size: 13px; }
+.tile-value { font-size: 32px; font-weight: 600; margin: 4px 0; }
+.tile-sub { color: var(--muted); font-size: 12px; }
+
+.nodes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; margin-bottom: 8px; }
+.card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.node-name { font-weight: 600; font-size: 16px; }
+.btn { border: 1px solid var(--border); background: white; border-radius: 6px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+.btn:hover { background: var(--page); }
+
+/* State: warna status selalu bersama ikon + label, bukan warna saja */
+.state { display: flex; align-items: baseline; gap: 10px; padding: 10px 12px; border-radius: 8px; border-left: 6px solid var(--neutral); background: var(--page); margin-bottom: 10px; }
+.state-icon { font-size: 20px; }
+.state-code { font-size: 20px; font-weight: 700; }
+.state-label { color: var(--ink-2); font-size: 14px; }
+.state-good { border-left-color: var(--good); }
+.state-good .state-icon { color: var(--good); }
+.state-warning { border-left-color: var(--warning); }
+.state-warning .state-icon { color: #9a6a00; }
+.state-critical { border-left-color: var(--critical); }
+.state-critical .state-icon { color: var(--critical); }
+.state-serious { border-left-color: var(--serious); }
+.state-serious .state-icon { color: #a8461f; }
+
+.kv { width: 100%; border-collapse: collapse; font-size: 14px; }
+.kv td { padding: 3px 0; }
+.kv td.k { color: var(--muted); width: 45%; }
+
+.toast { min-height: 22px; color: var(--ink-2); font-size: 13px; margin: 4px 0 12px; }
+
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 12px; margin-bottom: 12px; }
+.panel h2 { font-size: 16px; margin: 0 0 2px; }
+.caption { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+.muted { color: var(--muted); }
+
+.events { width: 100%; border-collapse: collapse; font-size: 14px; }
+.events th { text-align: left; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--grid); padding: 6px 8px; }
+.events td { border-bottom: 1px solid var(--grid); padding: 6px 8px; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 520px) {
+  .charts { grid-template-columns: 1fr; }
+  .tile-value { font-size: 26px; }
+}

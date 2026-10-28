@@ -53,3 +53,9 @@ firmware/test/.diagram.generated.json
 
 # Output mentah wokwi-cli (duplikat log serial)
 docs/assets/**/*-wokwi-cli.log
+
+# Hasil export_wokwi_web.py (dibuat ulang dari firmware/src)
+firmware/wokwi-web/
+
+# Data runtime dashboard
+dashboard/data/

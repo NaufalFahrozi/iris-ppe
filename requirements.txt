@@ -6,3 +6,4 @@ paho-mqtt>=2.0
 plotly
 python-dotenv
 kaggle
+dash

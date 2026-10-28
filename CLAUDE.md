@@ -225,6 +225,16 @@ Hasil langkah 0 (2026-10-29):
 - Keputusan: run penuh memakai **batch 4, workers 4**, `--time 14`, `patience 20`, max 100 epoch, dengan `training/gpu_log.ps1` mencatat suhu/daya GPU dan `--resume` jika terputus. Laptop harus tercolok charger dengan kabel yang kencang.
 - Statistik subset SH17-IRIS: `safety-vest` hanya 168 gambar train (433 instance), `helmet` 373 gambar. Run pertama tetap SH17 saja; Construction-PPE dipertimbangkan untuk fine-tune kedua jika AP rompi/helm lemah (keputusan dataset didelegasikan ke agent oleh ketua).
 
+Hasil run 1 `sh17-yolo26m` (SH17 saja): berhenti oleh EarlyStopping di epoch 21 (1,5 jam); `patience=20` terlalu
+pendek karena mAP turun setelah warmup lalu naik pelan. Best = epoch 1. AP50 val SH17 (best / epoch 21):
+person 0,92/0,89, head 0,92/0,90, helmet 0,62/0,64, **safety-vest 0,35/0,33 (recall ~0,2)**.
+
+Run 2 `merged-yolo26m` (dimulai 2026-10-29 04:13): data **SH17-IRIS + Construction-PPE-IRIS**
+(`training/prepare_cppe.py`: Person→person, no_helmet→head, helmet→helmet, vest→safety-vest; kepala berhelm yang tidak
+berlabel di Construction-PPE diisi **pseudo-label** dari model run 1, conf ≥ 0,5). Rompi train naik 433 → 1.702 instance,
+helm 773 → 2.114. Fine-tune dari `last.pt` run 1, AdamW lr0 0,0005, cos LR, warmup 1, `patience 30`, `--time 6`,
+batch 4. Metrik utama yang dilaporkan: val SH17 (bebas pseudo-label) + val gabungan.
+
 ---
 
 ## 6. Komponen awal (stage 2, Wokwi)
@@ -306,7 +316,10 @@ iris-ppe/
 
 - Ukuran model final (`yolo26m` vs `yolo26s`), diputuskan dari hasil training dan FPS
 - Nilai ambang eskalasi dan timeout fail-safe (nilai awal di `firmware/src/config.h`: warn 3 s, alarm 8 s, fail-safe 5 s, jendela buka 5 s)
-- Pemetaan GPIO final (draft di `docs/design.md` bagian 3, menunggu review Christian dan verifikasi visual)
+- Pemetaan GPIO final (draft di `docs/design.md` bagian 3, menunggu review Christian)
+- Rangkaian sudah dilihat di editor wokwi.com (2026-10-29, `docs/assets/irisan1/wokwi-circuit-first-look.jpg`): koneksi
+  sesuai rancangan, tapi tata letak kabel perlu dirapikan dan slide switch ROLE/SOURCE belum berlabel. Proyek wokwi.com
+  final (sketch, library, simpan dengan akun tim) belum dibuat.
 
 ---
 
@@ -379,6 +392,6 @@ Catat untuk setiap tes: Test Case, Input/Condition, Expected Result, Actual Resu
 - [ ] 2. Irisan 1 – Gerbang tanpa YOLO (logic gerbang+zona lulus 8 uji wokwi-cli I1-1..I1-8; **sisa: verifikasi visual rangkaian di Wokwi**)
 - [x] 3. Irisan 2 – MQTT (TLS + verifikasi CA, e2e via simulator Python: T1–T5 + override 9/9, T6 4/4 di Wokwi; T1–T6 dengan vision asli menunggu irisan 3/5)
 - [ ] 4. Irisan 3 – Vision
-- [ ] 5. Irisan 4 – Dashboard
+- [x] 5. Irisan 4 – Dashboard (Plotly Dash `dashboard/app.py`; uji D1–D5 lulus dengan 2 ESP32 Wokwi + simulator vision)
 - [ ] 6. Irisan 5 – Monitoring
 - [ ] 7. Finalisasi & pengumpulan

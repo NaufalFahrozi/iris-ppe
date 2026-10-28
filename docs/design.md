@@ -175,7 +175,25 @@ mengirim `0` sebelum jam tersinkron).
 aktuator mempertahankan state terakhir. Pada mode LIVE durasi pelanggaran dihitung server, jadi timer zona tidak
 terpengaruh; pada mode TEST timer lokal ikut berjalan.
 
-## 6. Format log Serial
+## 6. Dashboard (`dashboard/`)
+
+Plotly Dash, berjalan lokal di http://127.0.0.1:8050, refresh tiap 1 detik. `store.py` subscribe
+`<prefix>/+/status`, `<prefix>/+/event`, `<prefix>/+/detection`, dan heartbeat; event dicatat ke
+`dashboard/data/events.csv`.
+
+| Bagian | Isi | Sumber data |
+|---|---|---|
+| Indikator koneksi | Broker terhubung; server vision online (heartbeat ≤ 5 s) | koneksi paho, heartbeat |
+| Stat tile | Compliance rate sesi, jumlah pelanggaran (denied+alarm), izin masuk (granted), FPS server vision | detection, event, heartbeat |
+| Kartu node `gate1`, `zoneA` | State (warna status + ikon + label), palang/durasi, jumlah orang, APD kurang, umur data; tombol **Reset alarm** → `override` | status |
+| Grafik compliance rate | % orang patuh per 30 s, 10 menit terakhir (satu garis) | detection |
+| Grafik pelanggaran per waktu | Event denied/alarm per 30 s, ditumpuk menurut APD kurang (helm, rompi) | event |
+| Tabel event terbaru | 12 event terakhir (juga berfungsi sebagai versi tabel grafik) | event |
+
+Warna: palet status (good/warning/serious/critical) hanya untuk state, selalu bersama ikon dan label; seri grafik
+memakai warna kategorikal biru/oranye (lolos validator palet: CVD ΔE 24,7, kontras ≥ 3:1).
+
+## 7. Format log Serial
 
 Satu baris per kejadian, diawali tag:
 

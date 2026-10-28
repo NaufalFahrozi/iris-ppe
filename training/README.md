@@ -29,6 +29,23 @@ Split resmi SH17 (`train_files.txt`, `val_files.txt`). Statistik hasil remap (in
 
 Catatan: `helmet` dan `safety-vest` jauh lebih sedikit dibanding `person`/`head`.
 
+## 1b. Tambahan: Ultralytics Construction-PPE (memperkuat helm & rompi)
+
+```
+curl -L -o datasets/raw/construction-ppe.zip https://github.com/ultralytics/assets/releases/download/v0.0.0/construction-ppe.zip
+# ekstrak ke datasets/raw/cppe
+.venv\Scripts\python training/prepare_cppe.py --model runs/train/sh17-yolo26m/weights/last.pt
+```
+
+Remap: `Person`→person, `no_helmet`→head, `helmet`→helmet, `vest`→safety-vest. Kepala berhelm tidak dilabeli di dataset
+ini, jadi label `head` diisi pseudo-label dari model SH17 (conf ≥ 0,5). Hasil: `datasets/cppe-iris/` dan
+`datasets/iris-merged.yaml` (train/val = SH17-IRIS + CPPE-IRIS).
+
+| Split | Gambar | person | head (termasuk pseudo) | helmet | safety-vest |
+|---|---|---|---|---|---|
+| train | 1.132 | 1.770 | 1.760 | 1.341 | 1.269 |
+| val | 143 | 239 | 230 | 201 | 171 |
+
 ## 2. Training
 
 ```
@@ -41,3 +58,4 @@ Hasil di `runs/train/<name>/` (tidak di-commit). Metrik untuk laporan disalin ke
 ## Atribusi
 
 SH17 Dataset, CC BY-NC-SA 4.0 — H. M. Ahmad and A. Rahimi, arXiv:2407.04590, 2024.
+Ultralytics Construction-PPE Dataset, AGPL-3.0 — https://docs.ultralytics.com/datasets/detect/construction-ppe/

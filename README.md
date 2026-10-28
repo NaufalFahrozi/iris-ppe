@@ -41,6 +41,10 @@ Kamera ─► Server vision (YOLO + tracking + aturan) ─► broker.hivemq.com 
    - Mode TEST (tombol): `.venv\Scripts\python firmware/test/run_tests.py`
    - End-to-end MQTT (ESP32 mode LIVE ↔ broker ↔ Python): `.venv\Scripts\python firmware/test/mqtt_e2e.py gate` / `zone`
 5. Simulator server vision (tanpa kamera): `.venv\Scripts\python vision/sim_publisher.py --node gate1 --scenario demo`
+6. Dashboard: `.venv\Scripts\python dashboard/app.py`, lalu buka http://127.0.0.1:8050
+   (status node, compliance rate, pelanggaran per waktu, event terbaru, tombol reset alarm; event juga dicatat ke
+   `dashboard/data/events.csv`).
+7. Proyek wokwi.com: `.venv\Scripts\python firmware/export_wokwi_web.py` lalu tempel isi `firmware/wokwi-web/` ke editor wokwi.com.
 
 Rancangan, GPIO, state machine, dan format MQTT: [docs/design.md](docs/design.md). Hasil uji: [docs/testing-log.md](docs/testing-log.md).
 
@@ -65,7 +69,8 @@ Model dilatih memakai **SH17 Dataset** (lisensi CC BY-NC-SA 4.0, non-komersial):
 
 > H. M. Ahmad and A. Rahimi, "SH17: A dataset for human safety and personal protective equipment detection in manufacturing industry," arXiv:2407.04590, 2024. Sumber: https://github.com/ahmadmughees/SH17dataset
 
-Dataset tidak disertakan di repo ini.
+Ditambah **Ultralytics Construction-PPE** (AGPL-3.0, https://docs.ultralytics.com/datasets/detect/construction-ppe/)
+untuk memperkuat deteksi helm dan rompi. Dataset tidak disertakan di repo ini.
 
 ## Lisensi
 
