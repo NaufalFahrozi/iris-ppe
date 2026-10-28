@@ -5,4 +5,4 @@ ultralytics
 paho-mqtt>=2.0
 plotly
 python-dotenv
-kagglehub
+kaggle
