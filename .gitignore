@@ -59,3 +59,9 @@ firmware/wokwi-web/
 
 # Data runtime dashboard
 dashboard/data/
+
+# Laporan pemakaian Claude Code (lokal)
+session-report-*.html
+
+# Bobot model lokal (dibagikan lewat Releases/Drive)
+/models/

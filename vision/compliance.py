@@ -1,0 +1,108 @@
+"""Aturan kepatuhan APD IRIS: kaitkan helm & rompi ke orang berdasarkan posisi kotak (tanpa kelas "no-helmet").
+
+Kotak dalam piksel (x1, y1, x2, y2). Kelas model: 0 person, 1 head, 2 helmet, 3 safety-vest.
+"""
+
+from collections import deque
+from dataclasses import dataclass, field
+
+PERSON, HEAD, HELMET, VEST = 0, 1, 2, 3
+
+# Area relatif terhadap kotak orang (0 = atas, 1 = bawah)
+HEAD_ZONE = (0.0, 0.35)   # pusat helm harus di sini
+TORSO_ZONE = (0.15, 0.75)  # pusat rompi harus di sini
+
+
+@dataclass
+class Box:
+    x1: float
+    y1: float
+    x2: float
+    y2: float
+    conf: float = 1.0
+
+    @property
+    def cx(self): return (self.x1 + self.x2) / 2
+
+    @property
+    def cy(self): return (self.y1 + self.y2) / 2
+
+    @property
+    def w(self): return self.x2 - self.x1
+
+    @property
+    def h(self): return self.y2 - self.y1
+
+
+def _inside_zone(item: Box, person: Box, zone: tuple[float, float], margin: float = 0.1) -> bool:
+    """Pusat item berada dalam rentang vertikal `zone` dan horizontal kotak orang (+margin)."""
+    rel_y = (item.cy - person.y1) / max(person.h, 1e-6)
+    in_x = person.x1 - margin * person.w <= item.cx <= person.x2 + margin * person.w
+    return in_x and zone[0] <= rel_y <= zone[1]
+
+
+def assign_ppe(persons: list[Box], helmets: list[Box], vests: list[Box]) -> list[dict]:
+    """Untuk tiap orang: apakah ada helm di area kepala dan rompi di area badan.
+
+    Satu item APD hanya diberikan ke satu orang (yang pusatnya paling dekat), agar orang tanpa helm yang berdiri di
+    belakang orang berhelm tidak ikut dianggap patuh.
+    """
+    result = [{"helmet": False, "vest": False} for _ in persons]
+    for items, key, zone in ((helmets, "helmet", HEAD_ZONE), (vests, "vest", TORSO_ZONE)):
+        for it in items:
+            candidates = [i for i, p in enumerate(persons) if _inside_zone(it, p, zone)]
+            if not candidates:
+                continue
+            best = min(candidates, key=lambda i: (persons[i].cx - it.cx) ** 2 + (persons[i].cy - it.cy) ** 2)
+            result[best][key] = True
+    return result
+
+
+def in_roi(person: Box, roi: list[tuple[float, float]] | None, width: int, height: int) -> bool:
+    """Titik kaki orang (tengah bawah kotak) di dalam poligon ROI (koordinat ternormalisasi 0..1)."""
+    if not roi:
+        return True
+    x, y = person.cx / width, person.y2 / height
+    inside = False
+    for (x1, y1), (x2, y2) in zip(roi, roi[1:] + roi[:1]):
+        if (y1 > y) != (y2 > y) and x < (x2 - x1) * (y - y1) / (y2 - y1 + 1e-12) + x1:
+            inside = not inside
+    return inside
+
+
+@dataclass
+class TrackState:
+    """Riwayat per track ID: voting beberapa frame terakhir agar status tidak berkedip, plus timer pelanggaran."""
+    helmet: deque = field(default_factory=lambda: deque(maxlen=8))
+    vest: deque = field(default_factory=lambda: deque(maxlen=8))
+    violation_since: float | None = None
+    last_seen: float = 0.0
+
+    def update(self, helmet: bool, vest: bool, now: float) -> dict:
+        self.helmet.append(helmet)
+        self.vest.append(vest)
+        self.last_seen = now
+        h = sum(self.helmet) * 2 >= len(self.helmet)  # mayoritas (seri dianggap patuh)
+        v = sum(self.vest) * 2 >= len(self.vest)
+        if h and v:
+            self.violation_since = None
+        elif self.violation_since is None:
+            self.violation_since = now
+        return {"helmet": h, "vest": v,
+                "violation_s": 0.0 if self.violation_since is None else round(now - self.violation_since, 1)}
+
+
+class ComplianceTracker:
+    """Kumpulan TrackState per ID; track yang hilang lebih dari `forget_s` dibuang."""
+
+    def __init__(self, forget_s: float = 3.0):
+        self.tracks: dict[int, TrackState] = {}
+        self.forget_s = forget_s
+
+    def update(self, track_id: int, helmet: bool, vest: bool, now: float) -> dict:
+        state = self.tracks.setdefault(track_id, TrackState())
+        return state.update(helmet, vest, now)
+
+    def prune(self, now: float) -> None:
+        for tid in [t for t, s in self.tracks.items() if now - s.last_seen > self.forget_s]:
+            del self.tracks[tid]

@@ -7,3 +7,4 @@ plotly
 python-dotenv
 kaggle
 dash
+lap
