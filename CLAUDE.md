@@ -321,7 +321,7 @@ iris-ppe/
     koordinasi → Naufal); anggota lain yang ikut bekerja di sesi itu boleh dicantumkan sebagai `Co-authored-by:`. Porsi
     Naufal dikurangi karena commit awal sudah banyak atas namanya. Tanpa atribusi Claude. History yang sudah di-push tidak
     ditulis ulang.
-  - Email: Naufal `naufalfahrozi01@gmail.com`, Delima `delimasitompul514@gmail.com`, Kalingga `kalingga449@gmail.com`,
+  - Email: Naufal `naufalfahrozi01@gmail.com`, Delima `delimasitompul514@gmail.com`, Kalingga `kalingga221@gmail.com`,
     Christian `christianmba01@gmail.com` (harus terdaftar di akun GitHub masing-masing agar nama muncul).
 - Tag `stage2-submission` pada commit yang dikumpulkan.
 
