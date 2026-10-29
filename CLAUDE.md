@@ -323,9 +323,9 @@ iris-ppe/
 - Nilai ambang eskalasi dan timeout fail-safe (`firmware/src/config.h`: warn 3 s, alarm 8 s, jendela buka 5 s; fail-safe dinaikkan 5 → 8 s setelah uji video karena jeda broker publik memicu FAULT palsu)
 - Resolusi inferensi: gerbang (kamera dekat) 640, zona/CCTV jauh 1280 (uji V8); ambang keyakinan per kelas ditetapkan setelah run 3
 - Pemetaan GPIO final (draft v2 di `docs/design.md` bagian 3: input kiri, output kanan; menunggu review Christian)
-- Rangkaian sudah dirapikan dan dicek visual di editor wokwi.com (`docs/assets/irisan1/wokwi-circuit.png`). Proyek
-  wokwi.com final (tempel sketch + library, simpan dengan akun tim) belum dibuat; tempel kode harus via clipboard
-  karena editor Wokwi menambah kurung otomatis saat diketik.
+- Proyek wokwi.com sudah dibuat dan disimpan (Public, akun naufalfahrozi; Unlisted hanya untuk paket berbayar):
+  https://wokwi.com/projects/479194485722835969 — isi = `firmware/export_wokwi_web.py` (sketch, diagram, config.h,
+  ca_cert.h, 5 library). Setiap firmware berubah, perbarui juga proyek ini (sketch.ino ditempel manual via Ctrl+V).
 
 ---
 

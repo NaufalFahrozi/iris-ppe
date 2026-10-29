@@ -53,7 +53,7 @@ Rancangan, GPIO, state machine, dan format MQTT: [docs/design.md](docs/design.md
 
 ## Link
 
-- Proyek Wokwi: _menyusul_
+- Proyek Wokwi: https://wokwi.com/projects/479194485722835969
 - Video demo: _menyusul_
 - Bobot model final: _menyusul (GitHub Releases)_
 
