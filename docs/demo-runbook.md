@@ -48,7 +48,7 @@ Mode **gerbang** (webcam dekat, seluruh frame dihitung; ROI hanya dipakai jika k
 .venv\Scripts\python vision/run_vision.py --source 1 --node gate1 --show
 ```
 
-Mode **zona** (kamera CCTV lebih jauh, resolusi lebih tinggi):
+Mode **zona** (monitoring ala CCTV):
 
 ```
 .venv\Scripts\python vision/run_vision.py --source 1 --node zoneA --show
@@ -57,9 +57,6 @@ Mode **zona** (kamera CCTV lebih jauh, resolusi lebih tinggi):
 Untuk kamera CCTV yang jauh (orang kecil di frame) tambahkan `--imgsz 1280`.
 
 Latihan tanpa rompi: tambahkan `--ignore-vest` (rompi dianggap selalu dipakai). **Jangan dipakai saat rekam demo.**
-
-```
-```
 
 Jendela "IRIS vision" muncul. Kotak **hijau** = patuh, **merah** = melanggar, abu-abu = di luar ROI.
 Label `H:Y V:N` artinya helm terdeteksi, rompi tidak. Tekan `q` di jendela itu untuk berhenti.
