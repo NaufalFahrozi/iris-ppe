@@ -138,3 +138,9 @@ setelah laptop sleep, GPU RTX 4050 hilang dari sistem (status PHANTOM) dan visio
 restart Windows; saat demo laptop harus tercolok charger dan sleep dimatikan. Proyek wokwi.com ternyata masih memakai batas
 handshake TLS 8 s (repo: 30 s) → diperbarui dan disimpan; isi sketch, config, diagram, dan library lalu dicocokkan dengan
 `firmware/export_wokwi_web.py` (hanya beda komentar/format).
+
+Latihan webcam (2026-10-29 malam, **bukan uji resmi**): webcam USB (`--source 1`, 640×480, ±30 FPS) → vision → broker →
+ESP32 wokwi.com → dashboard berjalan end-to-end. Rompi belum tersedia, jadi dipakai flag latihan `--ignore-vest`; helm
+asli (2 buah). Teramati: gerbang GRANTED saat semua orang di frame berhelm dan DENIED saat ada yang tanpa helm (palang
+buka/tutup), zona NORMAL → WARNING → ALARM untuk orang tanpa helm, dashboard menampilkan status dan compliance rate.
+Uji resmi T1–T6 dengan helm + rompi dijadwalkan Jumat siang bersama rekaman video demo.

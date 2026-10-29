@@ -40,16 +40,25 @@ Buka http://127.0.0.1:8050 di browser. **Yang harus terlihat:** "Broker terhubun
 
 ## 3. Jalankan vision dengan webcam (jendela PowerShell ketiga)
 
-Mode **gerbang** (kamera dekat, ROI = 70% bagian bawah frame):
+Di laptop tim, webcam USB = `--source 1` (kamera bawaan di indeks 0 rusak dan hanya memberi frame hitam).
+
+Mode **gerbang** (webcam dekat, seluruh frame dihitung; ROI hanya dipakai jika kaki orang terlihat di frame):
 
 ```
-.venv\Scripts\python vision/run_vision.py --source 0 --node gate1 --roi "0,0.3;1,0.3;1,1;0,1" --show
+.venv\Scripts\python vision/run_vision.py --source 1 --node gate1 --show
 ```
 
 Mode **zona** (kamera CCTV lebih jauh, resolusi lebih tinggi):
 
 ```
-.venv\Scripts\python vision/run_vision.py --source 0 --node zoneA --imgsz 1280 --show
+.venv\Scripts\python vision/run_vision.py --source 1 --node zoneA --show
+```
+
+Untuk kamera CCTV yang jauh (orang kecil di frame) tambahkan `--imgsz 1280`.
+
+Latihan tanpa rompi: tambahkan `--ignore-vest` (rompi dianggap selalu dipakai). **Jangan dipakai saat rekam demo.**
+
+```
 ```
 
 Jendela "IRIS vision" muncul. Kotak **hijau** = patuh, **merah** = melanggar, abu-abu = di luar ROI.
@@ -85,6 +94,8 @@ mudah terdeteksi daripada helm hitam, rompi reflektif paling mudah.
 | FPS rendah (< 10) | GPU dipakai training, atau imgsz 1280 | Hentikan training; untuk gerbang pakai default (640) |
 | Dashboard "Broker terputus" | Internet putus | Sambungkan internet, refresh halaman |
 | `ModuleNotFoundError` | venv belum dipakai | Selalu jalankan dengan `.venv\Scripts\python` |
+| `No Python at '...cpython-3.12.12...'` | Python dasar venv belum terpasang untuk user ini | `uv python install 3.12.12`, lalu ulangi |
+| Spam `can't grab frame` / layar hitam | Indeks kamera salah (kamera bawaan rusak) | Pakai `--source 1` (webcam USB) |
 
 Kalau masih bingung: salin pesan error lengkap + jelaskan langkah yang dilakukan, kirim ke Naufal / agent.
 
