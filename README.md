@@ -46,6 +46,9 @@ Kamera ─► Server vision (YOLO + tracking + aturan) ─► broker.hivemq.com 
    `dashboard/data/events.csv`).
 7. Proyek wokwi.com: `.venv\Scripts\python firmware/export_wokwi_web.py` lalu tempel isi `firmware/wokwi-web/` ke editor wokwi.com.
 
+8. Server vision (kamera → YOLO → MQTT): `.venv\Scripts\python vision/run_vision.py --source 0 --node gate1 --show`
+
+**Panduan uji & demo langkah demi langkah: [docs/demo-runbook.md](docs/demo-runbook.md).**
 Rancangan, GPIO, state machine, dan format MQTT: [docs/design.md](docs/design.md). Hasil uji: [docs/testing-log.md](docs/testing-log.md).
 
 ## Link
