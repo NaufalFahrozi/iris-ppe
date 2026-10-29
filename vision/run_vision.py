@@ -67,6 +67,8 @@ def main() -> None:
                     help="khusus pengujian: simpan frame beranotasi tiap --debug-every frame (jangan untuk kamera nyata)")
     ap.add_argument("--debug-every", type=int, default=30)
     ap.add_argument("--loop", type=int, default=1, help="khusus pengujian: putar file video N kali berturut-turut")
+    ap.add_argument("--ignore-vest", action="store_true",
+                    help="khusus latihan tanpa rompi: rompi dianggap selalu dipakai (JANGAN dipakai untuk demo/laporan)")
     args = ap.parse_args()
 
     model = YOLO(args.weights)
@@ -75,6 +77,8 @@ def main() -> None:
     det_topic = iris_mqtt.topic(args.node, "detection")
     tracker = ComplianceTracker()
     source = int(args.source) if args.source.isdigit() else args.source
+    if args.ignore_vest:
+        print("[VISION] PERINGATAN: --ignore-vest aktif, rompi tidak diperiksa (mode latihan)", flush=True)
     print(f"[VISION] weights={args.weights.name} source={args.source} node={args.node} roi={roi} "
           f"mqtt={'off' if client is None else iris_mqtt.HOST}", flush=True)
 
@@ -107,6 +111,9 @@ def main() -> None:
         vests = [Box(*b, c) for k, b, c in zip(cls, xyxy, confs) if k == VEST and c >= args.conf_vest]
 
         ppe = assign_ppe([p for _, p in persons], helmets, vests)
+        if args.ignore_vest:
+            for item in ppe:
+                item["vest"] = True
         inside = [in_roi(p, roi, w, h) for _, p in persons]
         states = [tracker.update(tid, a["helmet"], a["vest"], now, box) for (tid, box), a in zip(persons, ppe)]
         tracker.prune(now)
