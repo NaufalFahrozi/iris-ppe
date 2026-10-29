@@ -174,10 +174,13 @@ Tombol RESET (atau perintah `override` dari dashboard) membungkam buzzer tanpa m
    gelap tetap terdeteksi; diuji pada video patuh dan tanpa rompi).
    **Model:** YOLO26m dipertahankan (YOLO26s tidak perlu dilatih karena FPS 26m sudah jauh di atas kebutuhan real-time).
 2. **Tracking:** ByteTrack memberi ID per orang antar frame.
-3. **Aturan kepatuhan:** helm dihitung jika pusatnya berada di area kepala kotak orang (0–35% tinggi), rompi jika di
-   area badan (15–75%); satu item APD hanya diberikan ke orang terdekat. Tidak memakai kelas "no-helmet".
+3. **Aturan kepatuhan:** helm dihitung jika tepi atasnya berada di puncak kotak orang (20% teratas), sehingga helm yang
+   dipegang di tangan atau di depan dada tidak dihitung; rompi jika pusatnya di area badan (15–75%); satu item APD hanya
+   diberikan ke orang terdekat. Tidak memakai kelas "no-helmet". (Versi awal memakai pusat helm di 0–35% tinggi, tetapi
+   gagal pada close-up karena kotak helm sebagian dataset membungkus seluruh kepala; uji V10.)
 4. **Stabilisasi:** status APD tiap orang = mayoritas deteksi dalam 1 detik terakhir (mencegah palang buka-tutup
-   akibat deteksi berkedip); timer pelanggaran per orang tetap berlanjut walau ID tracking berganti.
+   akibat deteksi berkedip); timer pelanggaran per orang tetap berlanjut walau ID tracking berganti; orang baru dihitung
+   setelah terlihat ≥ 1 detik agar deteksi palsu sesaat (mis. benda di tepi frame) tidak menutup palang (uji V11).
 5. **ROI gerbang:** hanya orang yang titik kakinya di dalam poligon area masuk yang dihitung.
 6. **Publikasi:** `detection` (maks 5 Hz) dan `heartbeat` (1 Hz, berisi FPS) ke MQTT. Tidak ada video yang disimpan.
 

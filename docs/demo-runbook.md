@@ -5,7 +5,10 @@ Kalau ada yang tidak sesuai "Yang harus terlihat", lihat bagian **Kalau ada masa
 
 ## 0. Persiapan (sekali saja)
 
-- Laptop dicolok charger, layar jangan ditutup.
+- Laptop dicolok charger, layar jangan ditutup. Di mode baterai GPU dibatasi dan FPS turun drastis.
+- **Matikan sleep** (Settings → System → Power → saat dicolok: sleep = Never). Setelah sleep, GPU RTX 4050 bisa hilang
+  dari sistem dan vision diam-diam jalan di CPU (±7 FPS). Cek sebelum mulai:
+  `.venv\Scripts\python -c "import torch; print(torch.cuda.is_available())"` harus `True`; kalau `False`, restart laptop.
 - Bobot model ada di `models\iris-best.pt` (disalin dari hasil training terbaik).
 - Webcam terpasang. Posisi kamera: **2–4 meter** dari orang, **seluruh badan** (kepala sampai pinggang minimal)
   terlihat, cahaya terang dari depan (jangan membelakangi jendela).
