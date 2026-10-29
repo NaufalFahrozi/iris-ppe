@@ -102,6 +102,9 @@ ESP32 di Wokwi mode LIVE gate1, lewat broker.hivemq.com. Skrip: `firmware/test/v
 | V7 | **T6 zona dengan pelanggaran nyata** | Video 8965561 (pekerja tanpa rompi) diputar 3× (`--loop 3`) | Abaikan < 3 s → WARNING → ALARM + event, lalu FAULT setelah vision berhenti | `NORMAL -> WARNING` (3,0 s) → `ALARM` (8,1 s) → `FAULT` | Lulus | `docs/assets/irisan3/vision-e2e-zone-serial.log` |
 | V8 | Resolusi inferensi untuk kamera jauh | Video 11798561 (orang ±60–100 px), imgsz 640 / 960 / 1280 | Pilih resolusi per mode | Helm terdeteksi 9 / 11 / **20**, rompi 2 / 2 / **11**, FPS 34 / 33 / **15,5** (GPU berbagi training) | Keputusan: gerbang 640, zona/CCTV jauh 1280 | output uji |
 | V9 | Model final run 3 + ambang per kelas | Video 5423610 (patuh) dan 8965561 (tanpa rompi), ambang helm/rompi 0,3/0,3, 0,4/0,4, 0,3/0,4 | Patuh: tanpa pelanggar; tanpa rompi: pelanggar | 0,3/0,3 dan **0,3/0,4**: sesuai di kedua video; 0,4/0,4: video patuh sempat dihitung pelanggar (helm gelap). Pipeline ±75 FPS (GPU tidak lagi berbagi training) | Lulus; dipakai helm 0,3, rompi 0,4 | `docs/assets/model/metrics.md` |
+| V10 | Helm pada close-up (pekerja dekat kamera) | Video 8965561 (kepala ±75% tinggi frame; kotak helm model run 3 membungkus seluruh kepala) | helmet=True, vest=False | Sebelum perbaikan: **helmet=False** walau helm terdeteksi (conf 0,87), karena pusat kotak helm jatuh di luar zona kepala (0–35%). Aturan diubah: tepi atas helm harus di 20% teratas kotak orang. Sesudah: helmet=True, vest=False | Lulus setelah perbaikan | unit test 10/10 (`test_closeup_whole_head_helmet_counts`, `test_helmet_held_at_chest_does_not_count`) |
+| V11 | Deteksi orang palsu sesaat | Video 5423610: benda merah di tepi frame terdeteksi sebagai person (conf 0,31–0,49, < 1 s) | Tidak memengaruhi keputusan gerbang | Sebelum: muncul sebagai pelanggar (#8) di payload. Orang kini baru dihitung setelah track bertahan ≥ 1 s (`MIN_TRACK_AGE_S`; track yang diwariskan saat ID berganti langsung terhitung). Sesudah: tidak muncul lagi. Sisa: helm hitam tampak belakang melawan cahaya sesaat tidak terdeteksi (±3 s video; sama dengan aturan lama: 32 vs 34 pesan) | Lulus; sisa dicatat sebagai keterbatasan | unit test 12/12 |
+| V12 | Regresi semua video + FPS (GPU, charger tercolok) | 4 video uji, imgsz 640 (gerbang) dan 1280 (zona) | Real-time | 78–85 FPS (640), 27–28 FPS (1280) | Lulus | output uji |
 
 Perbaikan dari V6: (1) `FAILSAFE_TIMEOUT_MS` 5 s → **8 s** (`firmware/src/config.h`) karena jeda broker publik memicu
 FAULT palsu; (2) state per orang **diwariskan saat ID tracking berganti** (track baru di posisi dekat dalam ≤ 1,5 s)
@@ -128,3 +131,10 @@ setelah heartbeat berhenti; OLED menampilkan "OFFLINE / Gerbang terkunci". Bukti
 | T4 | Dua orang, satu tidak patuh | | Palang tetap tertutup | | Belum diuji | |
 | T5 | Pelanggar masuk ROI saat palang terbuka | | Palang menutup, alarm | | Belum diuji | |
 | T6 | Zona kerja: pekerja melepas helm makin lama | | Abaikan → peringatan → alarm + event dashboard, reset saat patuh | | Belum diuji | |
+
+Pemeriksaan ulang menyeluruh (2026-10-29 malam): unit test 12/12, build firmware sukses (flash 93,4%), vision → broker
+diverifikasi dengan subscriber (detection + heartbeat), dashboard berjalan, webcam terbaca (1280×720). Temuan lingkungan:
+setelah laptop sleep, GPU RTX 4050 hilang dari sistem (status PHANTOM) dan vision diam-diam berjalan di CPU (±7 FPS) →
+restart Windows; saat demo laptop harus tercolok charger dan sleep dimatikan. Proyek wokwi.com ternyata masih memakai batas
+handshake TLS 8 s (repo: 30 s) → diperbarui dan disimpan; isi sketch, config, diagram, dan library lalu dicocokkan dengan
+`firmware/export_wokwi_web.py` (hanya beda komentar/format).

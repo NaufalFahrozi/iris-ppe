@@ -22,6 +22,19 @@ def test_helmet_held_in_hand_does_not_count():
     assert r[0]["helmet"] is False
 
 
+def test_helmet_held_at_chest_does_not_count():
+    # helm diangkat di depan dada (tepi atas y = 190, 30% dari atas kotak orang)
+    r = assign_ppe([PERSON_A], [Box(130, 190, 170, 225)], [])
+    assert r[0]["helmet"] is False
+
+
+def test_closeup_whole_head_helmet_counts():
+    # close-up: kotak orang hanya badan atas, kotak helm membungkus seluruh kepala (pusatnya di 37% kotak orang)
+    person = Box(0, 148, 1440, 2560)
+    r = assign_ppe([person], [Box(1, 82, 1318, 1903)], [])
+    assert r[0]["helmet"] is True
+
+
 def test_ppe_goes_to_nearest_person_only():
     # dua orang, satu helm milik B; A tidak boleh ikut dianggap memakai helm
     r = assign_ppe([PERSON_A, PERSON_B], [Box(330, 95, 370, 130)], [])
@@ -58,6 +71,21 @@ def test_no_flapping_at_high_fps():
             flips += prev is not None and s["helmet"] != prev
             prev = s["helmet"]
     assert flips == 0 and prev is False
+
+
+def test_new_track_confirmed_after_min_age():
+    t = ComplianceTracker()
+    assert t.update(5, False, False, 0.0)["confirmed"] is False   # baru muncul: belum dihitung
+    assert t.update(5, False, False, 0.5)["confirmed"] is False
+    assert t.update(5, False, False, 1.0)["confirmed"] is True    # bertahan 1 s: dihitung
+
+
+def test_relinked_track_keeps_confirmation():
+    t = ComplianceTracker()
+    t.update(1, True, True, 0.0, Box(100, 100, 200, 400))
+    t.update(1, True, True, 2.0, Box(100, 100, 200, 400))
+    # ID berganti (1 -> 2) di posisi yang sama: langsung terkonfirmasi, tidak menunggu 1 s lagi
+    assert t.update(2, True, True, 2.5, Box(105, 100, 205, 400))["confirmed"] is True
 
 
 def test_violation_timer_survives_id_switch():

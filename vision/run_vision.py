@@ -111,7 +111,8 @@ def main() -> None:
         states = [tracker.update(tid, a["helmet"], a["vest"], now, box) for (tid, box), a in zip(persons, ppe)]
         tracker.prune(now)
 
-        people = [{"id": tid, **st} for (tid, _), st, ok in zip(persons, states, inside) if ok]
+        people = [{"id": tid, "helmet": st["helmet"], "vest": st["vest"], "violation_s": st["violation_s"]}
+                  for (tid, _), st, ok in zip(persons, states, inside) if ok and st["confirmed"]]
         payload = iris_mqtt.detection_payload(people)
 
         if client and now - last_pub >= 1 / args.rate:

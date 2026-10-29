@@ -9,8 +9,10 @@ from dataclasses import dataclass, field
 PERSON, HEAD, HELMET, VEST = 0, 1, 2, 3
 
 # Area relatif terhadap kotak orang (0 = atas, 1 = bawah)
-HEAD_ZONE = (0.0, 0.35)   # pusat helm harus di sini
-TORSO_ZONE = (0.15, 0.75)  # pusat rompi harus di sini
+HELMET_TOP_ZONE = (-0.1, 0.2)  # tepi atas helm harus di sini (helm dipakai = di puncak kepala)
+TORSO_ZONE = (0.15, 0.75)      # pusat rompi harus di sini
+# Helm memakai tepi atas, bukan pusat: kotak helm sebagian dataset membungkus seluruh kepala, sehingga pada close-up
+# (kepala memenuhi separuh kotak orang) pusatnya jatuh di bawah area kepala walau helm jelas dipakai.
 
 
 @dataclass
@@ -34,9 +36,9 @@ class Box:
     def h(self): return self.y2 - self.y1
 
 
-def _inside_zone(item: Box, person: Box, zone: tuple[float, float], margin: float = 0.1) -> bool:
-    """Pusat item berada dalam rentang vertikal `zone` dan horizontal kotak orang (+margin)."""
-    rel_y = (item.cy - person.y1) / max(person.h, 1e-6)
+def _inside_zone(item: Box, person: Box, zone: tuple[float, float], margin: float = 0.1, use_top: bool = False) -> bool:
+    """Pusat item (atau tepi atasnya jika use_top) berada dalam rentang vertikal `zone` dan horizontal kotak orang."""
+    rel_y = ((item.y1 if use_top else item.cy) - person.y1) / max(person.h, 1e-6)
     in_x = person.x1 - margin * person.w <= item.cx <= person.x2 + margin * person.w
     return in_x and zone[0] <= rel_y <= zone[1]
 
@@ -48,9 +50,9 @@ def assign_ppe(persons: list[Box], helmets: list[Box], vests: list[Box]) -> list
     belakang orang berhelm tidak ikut dianggap patuh.
     """
     result = [{"helmet": False, "vest": False} for _ in persons]
-    for items, key, zone in ((helmets, "helmet", HEAD_ZONE), (vests, "vest", TORSO_ZONE)):
+    for items, key, zone, use_top in ((helmets, "helmet", HELMET_TOP_ZONE, True), (vests, "vest", TORSO_ZONE, False)):
         for it in items:
-            candidates = [i for i, p in enumerate(persons) if _inside_zone(it, p, zone)]
+            candidates = [i for i, p in enumerate(persons) if _inside_zone(it, p, zone, use_top=use_top)]
             if not candidates:
                 continue
             best = min(candidates, key=lambda i: (persons[i].cx - it.cx) ** 2 + (persons[i].cy - it.cy) ** 2)
@@ -71,6 +73,7 @@ def in_roi(person: Box, roi: list[tuple[float, float]] | None, width: int, heigh
 
 
 VOTE_WINDOW_S = 1.0  # status APD = mayoritas deteksi dalam jendela waktu ini (tidak bergantung FPS)
+MIN_TRACK_AGE_S = 1.0  # orang baru dihitung setelah terlihat selama ini (deteksi palsu sesaat, mis. benda di tepi frame)
 
 
 @dataclass
@@ -79,12 +82,15 @@ class TrackState:
     history: deque = field(default_factory=deque)  # (waktu, helm, rompi)
     violation_since: float | None = None
     last_seen: float = 0.0
+    first_seen: float | None = None
 
     def update(self, helmet: bool, vest: bool, now: float, window_s: float = VOTE_WINDOW_S) -> dict:
         self.history.append((now, helmet, vest))
         while self.history and now - self.history[0][0] > window_s:
             self.history.popleft()
         self.last_seen = now
+        if self.first_seen is None:
+            self.first_seen = now
         n = len(self.history)
         h = sum(x[1] for x in self.history) * 2 >= n  # mayoritas (seri dianggap patuh)
         v = sum(x[2] for x in self.history) * 2 >= n
@@ -93,7 +99,8 @@ class TrackState:
         elif self.violation_since is None:
             self.violation_since = now
         return {"helmet": h, "vest": v,
-                "violation_s": 0.0 if self.violation_since is None else round(now - self.violation_since, 1)}
+                "violation_s": 0.0 if self.violation_since is None else round(now - self.violation_since, 1),
+                "confirmed": now - self.first_seen >= MIN_TRACK_AGE_S}
 
 
 class ComplianceTracker:
