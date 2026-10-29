@@ -56,7 +56,9 @@ def main() -> None:
     ap.add_argument("--roi", default=None, help='poligon ROI ternormalisasi, mis. "0,0.4;1,0.4;1,1;0,1" (gerbang)')
     ap.add_argument("--conf", type=float, default=0.4, help="ambang person")
     ap.add_argument("--conf-helmet", type=float, default=0.3)
-    ap.add_argument("--conf-vest", type=float, default=0.3)
+    # ambang run 3: rompi = conf F1-optimal (0,42-0,45 di val/test); helm sengaja lebih rendah dari F1-optimal (0,4)
+    # karena helm gelap di video uji keyakinannya 0,3-0,4 dan voting 1 s meredam deteksi palsu
+    ap.add_argument("--conf-vest", type=float, default=0.4)
     ap.add_argument("--imgsz", type=int, default=640)
     ap.add_argument("--rate", type=float, default=5.0, help="maks. publish detection per detik")
     ap.add_argument("--show", action="store_true", help="tampilkan jendela anotasi (q = keluar)")

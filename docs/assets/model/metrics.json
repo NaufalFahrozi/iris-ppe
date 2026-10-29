@@ -1,0 +1,173 @@
+{
+  "weights": "runs/train/all-yolo26m/weights/best.pt",
+  "date": "2026-10-29 17:43",
+  "sets": {
+    "sh17-val": {
+      "data": "data.yaml",
+      "split": "val",
+      "imgsz": 640,
+      "map50": 0.7482,
+      "map50_95": 0.5546,
+      "speed_ms": {
+        "preprocess": 0.2,
+        "inference": 10.33,
+        "loss": 0.0,
+        "postprocess": 0.85
+      },
+      "classes": {
+        "person": {
+          "precision": 0.9145,
+          "recall": 0.8658,
+          "ap50": 0.9179,
+          "ap50_95": 0.7497,
+          "best_f1": 0.8913,
+          "best_f1_conf": 0.415
+        },
+        "head": {
+          "precision": 0.9445,
+          "recall": 0.8805,
+          "ap50": 0.9216,
+          "ap50_95": 0.705,
+          "best_f1": 0.9123,
+          "best_f1_conf": 0.374
+        },
+        "helmet": {
+          "precision": 0.7053,
+          "recall": 0.5974,
+          "ap50": 0.6433,
+          "ap50_95": 0.4302,
+          "best_f1": 0.6548,
+          "best_f1_conf": 0.409
+        },
+        "safety-vest": {
+          "precision": 0.6833,
+          "recall": 0.5464,
+          "ap50": 0.5102,
+          "ap50_95": 0.3335,
+          "best_f1": 0.6163,
+          "best_f1_conf": 0.422
+        }
+      }
+    },
+    "all-val": {
+      "data": "iris-all.yaml",
+      "split": "val",
+      "imgsz": 640,
+      "map50": 0.8676,
+      "map50_95": 0.6139,
+      "speed_ms": {
+        "preprocess": 0.23,
+        "inference": 12.76,
+        "loss": 0.0,
+        "postprocess": 0.91
+      },
+      "classes": {
+        "person": {
+          "precision": 0.8737,
+          "recall": 0.8605,
+          "ap50": 0.9115,
+          "ap50_95": 0.7248,
+          "best_f1": 0.8699,
+          "best_f1_conf": 0.436
+        },
+        "head": {
+          "precision": 0.9336,
+          "recall": 0.7253,
+          "ap50": 0.8458,
+          "ap50_95": 0.6459,
+          "best_f1": 0.8279,
+          "best_f1_conf": 0.22
+        },
+        "helmet": {
+          "precision": 0.8176,
+          "recall": 0.7457,
+          "ap50": 0.8136,
+          "ap50_95": 0.4801,
+          "best_f1": 0.7818,
+          "best_f1_conf": 0.407
+        },
+        "safety-vest": {
+          "precision": 0.8784,
+          "recall": 0.8491,
+          "ap50": 0.8997,
+          "ap50_95": 0.6046,
+          "best_f1": 0.8667,
+          "best_f1_conf": 0.422
+        }
+      }
+    },
+    "public-test": {
+      "data": "iris-public-test.yaml",
+      "split": "test",
+      "imgsz": 640,
+      "map50": 0.8461,
+      "map50_95": 0.5884,
+      "speed_ms": {
+        "preprocess": 0.3,
+        "inference": 16.35,
+        "loss": 0.0,
+        "postprocess": 0.93
+      },
+      "classes": {
+        "person": {
+          "precision": 0.7909,
+          "recall": 0.8576,
+          "ap50": 0.8954,
+          "ap50_95": 0.7286,
+          "best_f1": 0.8268,
+          "best_f1_conf": 0.394
+        },
+        "head": {
+          "precision": 0.9217,
+          "recall": 0.5183,
+          "ap50": 0.7124,
+          "ap50_95": 0.4841,
+          "best_f1": 0.7117,
+          "best_f1_conf": 0.072
+        },
+        "helmet": {
+          "precision": 0.8395,
+          "recall": 0.7692,
+          "ap50": 0.85,
+          "ap50_95": 0.5039,
+          "best_f1": 0.8077,
+          "best_f1_conf": 0.377
+        },
+        "safety-vest": {
+          "precision": 0.851,
+          "recall": 0.8889,
+          "ap50": 0.9266,
+          "ap50_95": 0.6369,
+          "best_f1": 0.8738,
+          "best_f1_conf": 0.446
+        }
+      }
+    }
+  },
+  "bench": [
+    {
+      "video": "pexels-11798561.mp4",
+      "imgsz": 640,
+      "frames": 300,
+      "fps": 79.5
+    },
+    {
+      "video": "pexels-11798561.mp4",
+      "imgsz": 1280,
+      "frames": 300,
+      "fps": 28.3
+    },
+    {
+      "video": "pexels-5434223.mp4",
+      "imgsz": 640,
+      "frames": 300,
+      "fps": 77.1
+    },
+    {
+      "video": "pexels-5434223.mp4",
+      "imgsz": 1280,
+      "frames": 300,
+      "fps": 27.5
+    }
+  ]
+}

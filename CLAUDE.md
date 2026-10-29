@@ -199,7 +199,7 @@ Kamera zona ────┼─► Server vision terpusat (laptop, GPU RTX 4050)
 
 ### 5.1 Model
 - **Ultralytics YOLO26**, generasi terbaru yang tersedia (YOLO27 belum dirilis). Mode tracking didukung untuk model deteksi. Fine-tune dari bobot pretrained COCO.
-- **Kandidat utama `yolo26m`**, pembanding `yolo26s`. Pilih final berdasarkan mAP di validation set **dan** FPS inferensi live di laptop (ukur, jangan diasumsikan). Demo butuh inferensi + tracking + MQTT berjalan lancar bersamaan.
+- **Final: `yolo26m`** (diputuskan 2026-10-29 setelah run 3: 77–80 FPS di 640 sudah jauh di atas kebutuhan real-time, sehingga `yolo26s` tidak dilatih). Rencana awal: kandidat utama `yolo26m`, pembanding `yolo26s`. Pilih final berdasarkan mAP di validation set **dan** FPS inferensi live di laptop (ukur, jangan diasumsikan). Demo butuh inferensi + tracking + MQTT berjalan lancar bersamaan.
 - `yolo26l`/`yolo26x` hanya dicoba kalau semua irisan wajib sudah selesai.
 - Hardware: laptop tim dengan RTX 4050. Cek VRAM dengan `nvidia-smi`, pakai `batch=-1` (autobatch). Google Colab sebagai cadangan.
 
@@ -239,6 +239,10 @@ batch 4. Metrik utama yang dilaporkan: val SH17 (bebas pseudo-label) + val gabun
 
 Run 3 `all-yolo26m` (mulai 2026-10-29 05:21): `datasets/iris-all.yaml` (5 sumber), dari best run 2, AdamW lr0 0,0005,
 cos LR, warmup 1, maks 40 epoch, `patience 25`, `--time 7`, batch 4.
+Selesai 2026-10-29 17:42 di epoch 38 (batas `--time`); best = epoch terakhir. Hasil (`training/evaluate.py`,
+`docs/assets/model/metrics.md`): val gabungan mAP50 0,868 / mAP50-95 0,614; **val SH17 mAP50 0,748** (person 0,92, head
+0,92, helmet 0,64, **rompi 0,51**, naik dari 0,33); test publik mAP50 0,846 (helm 0,85, rompi 0,93). FPS model.track di
+RTX 4050: 77–80 (imgsz 640), 27–28 (1280). Bobot terpasang di `models/iris-best.pt`.
 
 ---
 
@@ -329,9 +333,9 @@ iris-ppe/
 
 ## 11. Hal yang masih terbuka
 
-- Ukuran model final (`yolo26m` vs `yolo26s`), diputuskan dari hasil training dan FPS
 - Nilai ambang eskalasi dan timeout fail-safe (`firmware/src/config.h`: warn 3 s, alarm 8 s, jendela buka 5 s; fail-safe dinaikkan 5 → 8 s setelah uji video karena jeda broker publik memicu FAULT palsu)
-- Resolusi inferensi: gerbang (kamera dekat) 640, zona/CCTV jauh 1280 (uji V8); ambang keyakinan per kelas ditetapkan setelah run 3
+- Resolusi inferensi: gerbang (kamera dekat) 640, zona/CCTV jauh 1280 (uji V8). Ambang final: person 0,4, helm 0,3, rompi 0,4
+  (uji V9); bisa disesuaikan saat uji webcam
 - Pemetaan GPIO final (draft v2 di `docs/design.md` bagian 3: input kiri, output kanan; menunggu review Christian)
 - Proyek wokwi.com sudah dibuat dan disimpan (Public, akun naufalfahrozi; Unlisted hanya untuk paket berbayar):
   https://wokwi.com/projects/479194485722835969 — isi = `firmware/export_wokwi_web.py` (sketch, diagram, config.h,
