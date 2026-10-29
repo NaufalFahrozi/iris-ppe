@@ -111,6 +111,12 @@ Regresi setelah fail-safe 8 s (2026-10-29 pagi): uji video gerbang diulang (bukt
 Temuan: deteksi helm hitam tampak belakang lemah pada bobot sementara (DENIED awal di V2). Ditindaklanjuti dengan run 3
 (data helm ×19) dan ambang per kelas yang akan dihitung dari kurva F1 validasi.
 
+Regresi setelah handshake TLS 30 s + FAULT selama (re)connect MQTT (2026-10-29 siang): build sukses, mode TEST gate dan
+zone lulus di wokwi-cli. Uji failsafe tidak selesai karena **kuota menit CI gratis Wokwi bulan ini habis** ("You have used up
+your Free plan monthly CI minute quota"); uji berikutnya dilakukan di editor wokwi.com. Di proyek wokwi.com: MQTT tersambung,
+switch SOURCE ke LIVE → FAULT, `sim_publisher.py --scenario demo` → GRANTED, DENIED (rompi), DENIED (2 orang, helm), lalu FAULT
+setelah heartbeat berhenti; OLED menampilkan "OFFLINE / Gerbang terkunci". Bukti: `docs/assets/irisan2/wokwi-web-e2e.log`.
+
 ## Skenario utama (T1–T6)
 
 | ID | Test Case | Input/Condition | Expected Result | Actual Result | Status | Bukti |

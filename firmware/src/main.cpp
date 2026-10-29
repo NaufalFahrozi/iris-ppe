@@ -430,6 +430,8 @@ void networkLoop() {
   if (!mqtt.connected()) {
     if (lastMqttAttemptMs != 0 && now - lastMqttAttemptMs < NET_RETRY_MS) return;
     lastMqttAttemptMs = now;
+    // Handshake TLS bisa menahan loop lama: kunci gerbang dulu agar tidak tertahan dalam keadaan terbuka
+    if (source == Source::LIVE && state != State::FAULT) enterState(State::FAULT);
     String clientId = String("iris-") + nodeName() + "-" + String((uint32_t)ESP.getEfuseMac(), HEX);
     String willTopic = topicFor("status");
     String will = String("{\"node\":\"") + nodeName() + "\",\"state\":\"OFFLINE\"}";
@@ -481,7 +483,7 @@ void setup() {
 
   WiFi.mode(WIFI_STA);
   tlsClient.setCACert(CA_CERT);  // verifikasi sertifikat broker (bukan setInsecure)
-  tlsClient.setHandshakeTimeout(8);  // batasi lama loop tertahan saat (re)connect TLS (detik)
+  tlsClient.setHandshakeTimeout(30);  // detik; 8 s terlalu singkat untuk simulasi di browser wokwi.com
   mqtt.setServer(MQTT_HOST, MQTT_PORT);
   mqtt.setBufferSize(1024);      // payload detection bisa > 256 byte (default)
   mqtt.setCallback(onMqttMessage);

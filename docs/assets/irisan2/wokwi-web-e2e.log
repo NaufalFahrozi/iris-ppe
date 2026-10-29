@@ -1,0 +1,31 @@
+# Serial Monitor proyek wokwi.com (https://wokwi.com/projects/479194485722835969), 2026-10-29 siang.
+# Firmware: handshake TLS 30 s + FAULT selama (re)connect. Switch SOURCE digeser TEST -> LIVE saat berjalan,
+# lalu vision/sim_publisher.py --node gate1 --scenario demo dijalankan dari laptop. Hanya baris berlabel yang disalin.
+[BOOT] IRIS node=gate1 role=GATE source=TEST
+[NET] wifi connecting ssid=Wokwi-GUEST
+[STATE] FAULT -> IDLE missing=- persons=0
+[EVENT] node=gate1 type=recovered missing=- persons=0 duration_s=0.0
+[NET] wifi connected ip=10.10.0.2
+[MQTT] connecting broker.hivemq.com:8883 (TLS) id=iris-gate1-c40a24
+[MQTT] connected, subscribed sic8-montblanc/iris/{gate1,server}/...
+[MODE] role=GATE source=LIVE node=gate1
+[STATE] IDLE -> FAULT missing=- persons=0
+[EVENT] node=gate1 type=fault missing=- persons=0 duration_s=0.0
+[MQTT] rx detection persons=0 violators=0 missing=-
+[MQTT] heartbeat ok
+[STATE] FAULT -> IDLE missing=- persons=0
+[EVENT] node=gate1 type=recovered missing=- persons=0 duration_s=0.0
+[MQTT] rx detection persons=1 violators=0 missing=-
+[STATE] IDLE -> GRANTED missing=- persons=1
+[EVENT] node=gate1 type=granted missing=- persons=1 duration_s=0.0
+[STATE] GRANTED -> IDLE missing=- persons=1
+[MQTT] rx detection persons=0 violators=0 missing=-
+[MQTT] rx detection persons=1 violators=1 missing=vest
+[STATE] IDLE -> DENIED missing=vest persons=1
+[EVENT] node=gate1 type=denied missing=vest persons=1 duration_s=0.0
+[MQTT] rx detection persons=2 violators=1 missing=helmet
+[STATE] DENIED missing=helmet
+[MQTT] rx detection persons=0 violators=0 missing=-
+[STATE] DENIED -> IDLE missing=- persons=0
+[STATE] IDLE -> FAULT missing=- persons=0
+[EVENT] node=gate1 type=fault missing=- persons=0 duration_s=0.0
