@@ -179,9 +179,10 @@ mengirim `0` sebelum jam tersinkron).
 - ESP32 memakai PubSubClient, yang hanya bisa publish QoS 0; karena itu `event` QoS 0.
 - `vision/iris_mqtt.py` = modul koneksi Python bersama; `vision/sim_publisher.py` = simulator server vision.
 
-**Keterbatasan diketahui:** saat (re)connect TLS, `loop()` tertahan beberapa detik (handshake dibatasi 8 s). Selama itu
-aktuator mempertahankan state terakhir. Pada mode LIVE durasi pelanggaran dihitung server, jadi timer zona tidak
-terpengaruh; pada mode TEST timer lokal ikut berjalan.
+**Keterbatasan diketahui:** saat (re)connect TLS, `loop()` tertahan beberapa detik (handshake dibatasi 30 s karena
+simulator browser wokwi.com lambat). Pada mode LIVE, ESP32 masuk `FAULT` sebelum menyambung ulang, jadi palang selalu
+tertutup selama itu; pada mode TEST aktuator mempertahankan state terakhir dan timer lokal ikut berjalan. Pada mode
+LIVE durasi pelanggaran dihitung server, jadi timer zona tidak terpengaruh.
 
 ## 6. Dashboard (`dashboard/`)
 
