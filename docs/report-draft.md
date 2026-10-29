@@ -104,7 +104,11 @@ mengirim hasilnya lewat MQTT; pada mode uji, hasil deteksi disimulasikan dengan 
 
 ## 6. Wokwi Circuit / Wiring Diagram
 
-Link proyek Wokwi: [TODO: link proyek wokwi.com setelah disimpan]
+Link proyek Wokwi: https://wokwi.com/projects/479194485722835969
+
+Proyek wokwi.com berisi sketch yang sama dengan firmware PlatformIO di repo (`sketch.ino`, `config.h`, `ca_cert.h`,
+`diagram.json`, `libraries.txt`). Saat dijalankan di browser, ESP32 tersambung ke WiFi `Wokwi-GUEST` lalu ke broker
+HiveMQ lewat TLS, sehingga dapat menerima hasil deteksi dari server vision di laptop secara langsung.
 
 Gambar: `docs/assets/irisan1/wokwi-circuit.png`.
 
@@ -209,7 +213,9 @@ Ringkasan dari `docs/testing-log.md` (rincian dan bukti lengkap ada di sana).
 
 Temuan penting selama pengujian dan perbaikannya:
 1. Tombol uji tidak terbaca karena loop terlalu lama menggambar OLED → OLED hanya digambar ulang jika isinya berubah.
-2. Handshake TLS menahan loop beberapa detik → batas handshake 8 s, uji menunggu koneksi broker dulu.
+2. Handshake TLS menahan loop beberapa detik, dan di simulator browser wokwi.com batas 8 s selalu gagal (rc=-2) →
+   batas handshake 30 s, dan gerbang dikunci (`FAULT`) selama menyambung ulang sehingga palang tidak pernah tertahan
+   terbuka. Diverifikasi end-to-end di proyek wokwi.com (`docs/assets/irisan2/wokwi-web-e2e.log`).
 3. Palang buka-tutup 6 kali untuk satu pekerja karena deteksi helm berkedip → voting berbasis waktu 1 detik.
 4. Timer pelanggaran reset saat ID tracking berganti → state diwariskan ke ID baru di posisi yang sama.
 5. FAULT palsu akibat jeda broker publik > 5 s → batas fail-safe 8 s.
