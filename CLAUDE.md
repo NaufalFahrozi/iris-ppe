@@ -315,6 +315,12 @@ iris-ppe/
 - Dilarang: force push ke `main`, menulis ulang history yang sudah di-push, commit file rahasia.
 - **Jangan commit:** `.env`, token/kredensial, dataset, bobot model besar (`*.pt`, `*.onnx`), video mentah, folder build (`.pio/`, `runs/`, `__pycache__/`). Bobot model final dibagikan lewat GitHub Releases atau tautan Drive yang dicatat di README.
 - **Kontribusi (rubrik 5%):** commit dibuat oleh anggota yang benar-benar mengerjakan. Agent tidak memalsukan author atau co-author. Catat pembagian kerja yang sebenarnya di `docs/contributions.md`.
+  - Kebijakan atribusi (diputuskan ketua 2026-10-29, semua anggota setuju): tim bekerja bersama di satu laptop (akun git
+    Naufal). Anggota yang ikut mengerjakan unit kerja tersebut dicantumkan sebagai trailer `Co-authored-by:` di commit.
+    Kalau satu anggota mengerjakan suatu bagian sendiri (mis. diagram, review GPIO), commit itu memakai `--author` anggota
+    tersebut. Anggota yang tidak terlibat di unit kerja itu tidak dicantumkan. History yang sudah di-push tidak ditulis ulang.
+  - Email: Naufal `naufalfahrozi01@gmail.com`, Delima `delimasitompul514@gmail.com`, Kalingga `kalingga449@gmail.com`,
+    Christian `christianmba01@gmail.com` (harus terdaftar di akun GitHub masing-masing agar nama muncul).
 - Tag `stage2-submission` pada commit yang dikumpulkan.
 
 ---
