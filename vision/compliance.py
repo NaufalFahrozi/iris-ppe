@@ -97,16 +97,39 @@ class TrackState:
 
 
 class ComplianceTracker:
-    """Kumpulan TrackState per ID; track yang hilang lebih dari `forget_s` dibuang."""
+    """Kumpulan TrackState per ID; track yang hilang lebih dari `forget_s` dibuang.
 
-    def __init__(self, forget_s: float = 3.0):
+    Jika tracker memberi ID baru untuk orang yang sama (ID switch, sering terjadi pada objek kecil/terhalang), state
+    diwariskan dari track yang baru hilang (<= `relink_s`) dan posisinya dekat, agar timer pelanggaran tidak reset.
+    """
+
+    def __init__(self, forget_s: float = 3.0, relink_s: float = 1.5, relink_dist: float = 0.6):
         self.tracks: dict[int, TrackState] = {}
-        self.forget_s = forget_s
+        self.where: dict[int, tuple[float, float, float]] = {}  # id -> (cx, cy, tinggi) terakhir
+        self.forget_s, self.relink_s, self.relink_dist = forget_s, relink_s, relink_dist
 
-    def update(self, track_id: int, helmet: bool, vest: bool, now: float) -> dict:
+    def _relink(self, track_id: int, box: Box, now: float) -> None:
+        best, best_d = None, None
+        for tid, st in self.tracks.items():
+            if tid == track_id or st.last_seen >= now or now - st.last_seen > self.relink_s or tid not in self.where:
+                continue
+            cx, cy, h = self.where[tid]
+            d = ((cx - box.cx) ** 2 + (cy - box.cy) ** 2) ** 0.5
+            if d <= self.relink_dist * max(h, box.h) and (best_d is None or d < best_d):
+                best, best_d = tid, d
+        if best is not None:
+            self.tracks[track_id] = self.tracks.pop(best)
+            self.where.pop(best, None)
+
+    def update(self, track_id: int, helmet: bool, vest: bool, now: float, box: Box | None = None) -> dict:
+        if track_id not in self.tracks and box is not None:
+            self._relink(track_id, box, now)
         state = self.tracks.setdefault(track_id, TrackState())
+        if box is not None:
+            self.where[track_id] = (box.cx, box.cy, box.h)
         return state.update(helmet, vest, now)
 
     def prune(self, now: float) -> None:
         for tid in [t for t, s in self.tracks.items() if now - s.last_seen > self.forget_s]:
             del self.tracks[tid]
+            self.where.pop(tid, None)

@@ -60,6 +60,17 @@ def test_no_flapping_at_high_fps():
     assert flips == 0 and prev is False
 
 
+def test_violation_timer_survives_id_switch():
+    # Uji video zona: orang yang sama mendapat ID baru -> timer pelanggaran harus berlanjut, bukan reset
+    t = ComplianceTracker()
+    for i in range(20):  # 2 detik melanggar dengan ID 7
+        t.update(7, False, True, now=i * 0.1, box=Box(100, 100, 150, 250))
+    s = t.update(42, False, True, now=2.3, box=Box(105, 102, 155, 252))  # ID baru, posisi hampir sama
+    assert s["violation_s"] >= 2.0
+    far = t.update(99, False, True, now=2.4, box=Box(600, 100, 650, 250))  # orang lain, jauh -> state baru
+    assert far["violation_s"] == 0.0
+
+
 if __name__ == "__main__":
     tests = [v for k, v in dict(globals()).items() if k.startswith("test_")]
     for fn in tests:

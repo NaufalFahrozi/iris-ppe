@@ -64,6 +64,7 @@ def main() -> None:
     ap.add_argument("--debug-dir", type=Path, default=None,
                     help="khusus pengujian: simpan frame beranotasi tiap --debug-every frame (jangan untuk kamera nyata)")
     ap.add_argument("--debug-every", type=int, default=30)
+    ap.add_argument("--loop", type=int, default=1, help="khusus pengujian: putar file video N kali berturut-turut")
     args = ap.parse_args()
 
     model = YOLO(args.weights)
@@ -80,8 +81,12 @@ def main() -> None:
     t_prev = time.time()
     # Model dijalankan dengan ambang terendah, lalu disaring per kelas (helm/rompi boleh lebih rendah dari person)
     min_conf = {PERSON: args.conf, HELMET: args.conf_helmet, VEST: args.conf_vest}
-    for res in model.track(source, stream=True, persist=True, tracker="bytetrack.yaml", conf=min(min_conf.values()),
-                           imgsz=args.imgsz, verbose=False):
+    def frames_from_source():
+        for _ in range(max(1, args.loop)):
+            yield from model.track(source, stream=True, persist=True, tracker="bytetrack.yaml",
+                                   conf=min(min_conf.values()), imgsz=args.imgsz, verbose=False)
+
+    for res in frames_from_source():
         now = time.time()
         fps = 0.9 * fps + 0.1 * (1 / max(now - t_prev, 1e-6)) if fps else 1 / max(now - t_prev, 1e-6)
         t_prev = now
@@ -101,7 +106,7 @@ def main() -> None:
 
         ppe = assign_ppe([p for _, p in persons], helmets, vests)
         inside = [in_roi(p, roi, w, h) for _, p in persons]
-        states = [tracker.update(tid, a["helmet"], a["vest"], now) for (tid, _), a in zip(persons, ppe)]
+        states = [tracker.update(tid, a["helmet"], a["vest"], now, box) for (tid, box), a in zip(persons, ppe)]
         tracker.prune(now)
 
         people = [{"id": tid, **st} for (tid, _), st, ok in zip(persons, states, inside) if ok]

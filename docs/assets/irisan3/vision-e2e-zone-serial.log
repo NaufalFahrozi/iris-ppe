@@ -1,0 +1,58 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+[BOOT] IRIS node=zoneA role=ZONE source=LIVE
+[NET] wifi connecting ssid=Wokwi-GUEST
+[NET] wifi connected ip=10.13.37.2
+[MQTT] connecting broker.hivemq.com:8883 (TLS) id=iris-zoneA-c40a24
+[MQTT] connected, subscribed sic8-montblanc/iris/{zoneA,server}/...
+[STATUS] {"ts":1793234177,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793234177,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793234182,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793234187,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793234192,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793234197,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[MQTT] rx detection persons=1 violators=1 missing=vest
+[STATE] FAULT missing=vest
+[STATUS] {"ts":1793234198,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":["vest"],"person_count":1,"violation_s":0.0}
+[MQTT] heartbeat ok
+[STATE] FAULT -> NORMAL missing=vest persons=1
+[EVENT] node=zoneA type=recovered missing=vest persons=1 duration_s=0.0
+[STATUS] {"ts":1793234198,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":["vest"],"person_count":1,"violation_s":0.0}
+[MQTT] rx detection persons=1 violators=1 missing=helmet,vest
+[STATE] NORMAL missing=helmet,vest
+[STATUS] {"ts":1793234199,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":["helmet","vest"],"person_count":1,"violation_s":1.7}
+[MQTT] rx detection persons=1 violators=1 missing=vest
+[STATE] NORMAL missing=vest
+[STATUS] {"ts":1793234199,"node":"zoneA","mode":"zone","source":"live","state":"NORMAL","gate":"closed","missing":["vest"],"person_count":1,"violation_s":2.6}
+[STATE] NORMAL -> WARNING missing=vest persons=1
+[EVENT] node=zoneA type=warning missing=vest persons=1 duration_s=3.0
+[STATUS] {"ts":1793234199,"node":"zoneA","mode":"zone","source":"live","state":"WARNING","gate":"closed","missing":["vest"],"person_count":1,"violation_s":3.0}
+[MQTT] rx detection persons=1 violators=1 missing=helmet,vest
+[STATE] WARNING missing=helmet,vest
+[STATUS] {"ts":1793234201,"node":"zoneA","mode":"zone","source":"live","state":"WARNING","gate":"closed","missing":["helmet","vest"],"person_count":1,"violation_s":7.4}
+[STATE] WARNING -> ALARM missing=helmet,vest persons=1
+[EVENT] node=zoneA type=alarm missing=helmet,vest persons=1 duration_s=8.1
+[STATUS] {"ts":1793234201,"node":"zoneA","mode":"zone","source":"live","state":"ALARM","gate":"closed","missing":["helmet","vest"],"person_count":1,"violation_s":8.1}
+[MQTT] rx detection persons=1 violators=1 missing=vest
+[STATE] ALARM missing=vest
+[STATUS] {"ts":1793234201,"node":"zoneA","mode":"zone","source":"live","state":"ALARM","gate":"closed","missing":["vest"],"person_count":1,"violation_s":8.3}
+[MQTT] rx detection persons=1 violators=1 missing=helmet,vest
+[STATE] ALARM missing=helmet,vest
+[STATUS] {"ts":1793234203,"node":"zoneA","mode":"zone","source":"live","state":"ALARM","gate":"closed","missing":["helmet","vest"],"person_count":1,"violation_s":13.3}
+[MQTT] rx detection persons=1 violators=1 missing=vest
+[STATE] ALARM missing=vest
+[STATUS] {"ts":1793234203,"node":"zoneA","mode":"zone","source":"live","state":"ALARM","gate":"closed","missing":["vest"],"person_count":1,"violation_s":14.0}
+[STATUS] {"ts":1793234206,"node":"zoneA","mode":"zone","source":"live","state":"ALARM","gate":"closed","missing":["vest"],"person_count":1,"violation_s":17.1}
+[STATUS] {"ts":1793234211,"node":"zoneA","mode":"zone","source":"live","state":"ALARM","gate":"closed","missing":["vest"],"person_count":1,"violation_s":17.1}
+[STATE] ALARM -> FAULT missing=vest persons=1
+[EVENT] node=zoneA type=fault missing=vest persons=1 duration_s=17.1
+[STATUS] {"ts":1793234212,"node":"zoneA","mode":"zone","source":"live","state":"FAULT","gate":"closed","missing":["vest"],"person_count":1,"violation_s":17.1}

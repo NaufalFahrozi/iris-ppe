@@ -1,0 +1,13 @@
+===== datasets/videos/pexels-8965561.mp4 --loop 3
+[VISION] weights=iris-best.pt source=datasets/videos/pexels-8965561.mp4 node=zoneA roi=None mqtt=broker.hivemq.com
+[VISION] fps=0.2 persons_roi=1 violators=[1]
+[VISION] fps=33.5 persons_roi=1 violators=[1]
+[VISION] fps=34.9 persons_roi=1 violators=[1]
+[VISION] fps=32.4 persons_roi=1 violators=[1]
+[VISION] fps=45.8 persons_roi=1 violators=[1]
+[VISION] fps=34.0 persons_roi=1 violators=[1]
+[VISION] fps=32.6 persons_roi=1 violators=[1]
+[VISION] fps=36.2 persons_roi=1 violators=[1]
+[VISION] fps=35.5 persons_roi=1 violators=[1]
+[VISION] selesai, 555 frame, fps akhir 34.6, 1 track orang
+[VISION]   #1: helmet=True vest=False violation_s=17.3

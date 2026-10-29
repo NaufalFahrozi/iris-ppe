@@ -33,7 +33,8 @@ constexpr const char* NODE_GATE = "gate1";
 constexpr const char* NODE_ZONE = "zoneA";
 
 // ---- Waktu (nilai awal, difinalkan saat pengujian) ----
-constexpr unsigned long FAILSAFE_TIMEOUT_MS = 5000;  // tanpa data selama ini -> FAULT
+constexpr unsigned long FAILSAFE_TIMEOUT_MS = 8000;  // tanpa data selama ini -> FAULT (5 s memicu FAULT palsu
+                                                     // akibat jeda broker publik saat uji video, 2026-10-29)
 constexpr unsigned long OPEN_WINDOW_MS = 5000;       // lama palang terbuka per izin
 constexpr unsigned long GATE_REARM_MS = 2000;        // jeda tutup sebelum boleh buka lagi
 constexpr float ZONE_WARN_S = 3.0;                   // pelanggaran < ini diabaikan

@@ -98,6 +98,14 @@ ESP32 di Wokwi mode LIVE gate1, lewat broker.hivemq.com. Skrip: `firmware/test/v
 | V4 | Vision berhenti (T3) | Proses vision selesai | FAULT, gerbang terkunci | `DENIED -> FAULT` ±5 s setelah video habis | Lulus | idem |
 | V5 | Kecepatan | 1080p, RTX 4050 berbagi GPU dengan training | Real-time | 33–40 FPS (diukur pipeline) | Lulus | `vision-e2e-vision.log` |
 
+| V6 | Zona, mekanisme eskalasi (multi-orang) | Video 5434223 (2 pekerja, dekat) dan 11798561 (pekerja kecil di kejauhan), `--imgsz 1280` | NORMAL → WARNING → ALARM, reset saat patuh | Mekanisme benar (WARNING 3 s, ALARM 8 s, `cleared`). Tetapi "pelanggaran" di video ini adalah **deteksi yang meleset** (helm hitam, objek kecil), dan sempat terjadi FAULT palsu sekali (jeda jaringan > 5 s) | Lulus mekanisme; temuan ditindaklanjuti | `vision-e2e-zone-*.log` (run awal) |
+| V7 | **T6 zona dengan pelanggaran nyata** | Video 8965561 (pekerja tanpa rompi) diputar 3× (`--loop 3`) | Abaikan < 3 s → WARNING → ALARM + event, lalu FAULT setelah vision berhenti | `NORMAL -> WARNING` (3,0 s) → `ALARM` (8,1 s) → `FAULT` | Lulus | `docs/assets/irisan3/vision-e2e-zone-serial.log` |
+| V8 | Resolusi inferensi untuk kamera jauh | Video 11798561 (orang ±60–100 px), imgsz 640 / 960 / 1280 | Pilih resolusi per mode | Helm terdeteksi 9 / 11 / **20**, rompi 2 / 2 / **11**, FPS 34 / 33 / **15,5** (GPU berbagi training) | Keputusan: gerbang 640, zona/CCTV jauh 1280 | output uji |
+
+Perbaikan dari V6: (1) `FAILSAFE_TIMEOUT_MS` 5 s → **8 s** (`firmware/src/config.h`) karena jeda broker publik memicu
+FAULT palsu; (2) state per orang **diwariskan saat ID tracking berganti** (track baru di posisi dekat dalam ≤ 1,5 s)
+agar timer pelanggaran tidak reset; unit test 8/8 lulus.
+
 Temuan: deteksi helm hitam tampak belakang lemah pada bobot sementara (DENIED awal di V2). Ditindaklanjuti dengan run 3
 (data helm ×19) dan ambang per kelas yang akan dihitung dari kurva F1 validasi.
 
