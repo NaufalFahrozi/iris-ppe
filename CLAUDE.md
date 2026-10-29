@@ -302,6 +302,8 @@ iris-ppe/
 - ESP32 di Wokwi terhubung internet lewat WiFi virtual `Wokwi-GUEST` (tanpa password). **Uji koneksi TLS ke broker HiveMQ (`broker.hivemq.com:8883`) sedini mungkin.**
 - **Link proyek Wokwi untuk pengumpulan harus berupa proyek di wokwi.com.** Jaga agar sketch bisa dikompilasi di sana: siapkan versi `sketch.ino`, `diagram.json`, dan `libraries.txt`, lalu uji di wokwi.com sebelum pengumpulan. Dengan broker publik tidak ada kredensial MQTT; jika kelak pindah ke broker ber-autentikasi, kredensial di proyek publik wokwi.com harus khusus demo dan bisa dicabut.
 - Rangkaian buatan agent **wajib diverifikasi visual** di Wokwi sebelum dianggap benar.
+- **Kuota menit CI gratis Wokwi (wokwi-cli) habis sejak 2026-10-29 siang** (berlaku per bulan). Uji simulasi berikutnya
+  dilakukan di editor wokwi.com (gratis, ada antrean build); handshake TLS di sana butuh 30 s.
 
 ---
 
