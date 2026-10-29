@@ -31,6 +31,21 @@ Kamera ─► Server vision (YOLO + tracking + aturan) ─► broker.hivemq.com 
 | `dashboard/` | Dashboard paho-mqtt + Plotly |
 | `docs/` | Desain, log pengujian, kontribusi, aset laporan |
 
+## Cara paling mudah: launcher
+
+Double-click **`start-iris.bat`** di folder repo, lalu pilih nomor:
+
+| No | Mode |
+|---|---|
+| 1 / 2 | Gerbang / Zona dengan webcam (helm + rompi) |
+| 3 / 4 | Gerbang / Zona latihan tanpa rompi (jangan untuk demo) |
+| 5 | Simulator tanpa kamera (data contoh) |
+| 6 | Dashboard saja |
+
+Launcher memeriksa venv, model, dan GPU, menyalakan dashboard (jika belum jalan), membuka dashboard dan proyek
+wokwi.com di browser, lalu menjalankan vision di jendela sendiri. Di wokwi.com tetap klik ▶ dan atur slide switch
+(SOURCE kiri = LIVE; ROLE kiri = GATE, kanan = ZONE) sesuai petunjuk di layar launcher.
+
 ## Cara menjalankan
 
 1. Salin `.env.example` menjadi `.env`, isi `WOKWI_CLI_TOKEN` (MQTT sudah terisi untuk broker publik). Jangan di-commit.

@@ -14,6 +14,12 @@ Kalau ada yang tidak sesuai "Yang harus terlihat", lihat bagian **Kalau ada masa
   terlihat, cahaya terang dari depan (jangan membelakangi jendela).
 - APD untuk uji: helm proyek + rompi. Siapkan juga kondisi "tanpa rompi" dan "tanpa helm".
 
+## Cara cepat: `start-iris.bat`
+
+Double-click `start-iris.bat`, pilih mode (1 gerbang, 2 zona, 3/4 latihan tanpa rompi, 5 simulator, 6 dashboard),
+tekan Enter untuk kamera USB (indeks 1). Launcher menjalankan langkah 2 dan 3 di bawah secara otomatis; langkah 1
+(wokwi.com) tetap manual sesuai petunjuk di layar. Langkah manual di bawah dipakai jika launcher bermasalah.
+
 ## 1. Jalankan ESP32 (Wokwi)
 
 Pilih salah satu:
