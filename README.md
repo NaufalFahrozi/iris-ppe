@@ -51,11 +51,45 @@ Kamera ─► Server vision (YOLO + tracking + aturan) ─► broker.hivemq.com 
 **Panduan uji & demo langkah demi langkah: [docs/demo-runbook.md](docs/demo-runbook.md).**
 Rancangan, GPIO, state machine, dan format MQTT: [docs/design.md](docs/design.md). Hasil uji: [docs/testing-log.md](docs/testing-log.md).
 
+## Pasang di laptop lain (anggota tim)
+
+Butuh: Windows 10/11, [Git](https://git-scm.com/), [uv](https://docs.astral.sh/uv/) (`winget install astral-sh.uv`),
+webcam. GPU NVIDIA disarankan; tanpa GPU tetap jalan di CPU tetapi jauh lebih lambat.
+
+```powershell
+git clone https://github.com/NaufalFahrozi/iris-ppe.git
+cd iris-ppe
+uv venv --python 3.12 .venv
+uv pip install --python .venv torch torchvision --torch-backend=auto
+uv pip install --python .venv -r requirements.txt
+copy .env.example .env
+mkdir models
+curl.exe -L -o models/iris-best.pt https://github.com/NaufalFahrozi/iris-ppe/releases/download/model-v1/iris-best.pt
+```
+
+Lalu jalankan (dua terminal):
+
+```powershell
+.venv\Scripts\python dashboard/app.py                                    # buka http://127.0.0.1:8050
+.venv\Scripts\python vision/run_vision.py --source 0 --node gate1 --show  # webcam → MQTT
+```
+
+ESP32-nya dijalankan di proyek wokwi.com (link di bawah): klik ▶, tunggu "MQTT connected", geser switch SOURCE ke LIVE.
+
+Catatan:
+- **Satu node hanya boleh dilayani satu server vision.** Kalau dua laptop menjalankan `run_vision.py --node gate1`
+  bersamaan, ESP32 menerima dua aliran deteksi yang saling bertentangan. Laptop lain cukup menjalankan dashboard
+  (dashboard boleh dibuka di banyak laptop sekaligus) atau memakai node lain (`--node zoneA`).
+- Semua laptop memakai broker publik dan prefix topic yang sama, jadi tidak perlu konfigurasi tambahan; `.env` hanya perlu
+  `WOKWI_CLI_TOKEN` jika ingin memakai `wokwi-cli`.
+- Ambang keyakinan bisa disesuaikan jika helm/rompi sulit terdeteksi: `--conf-helmet 0.2 --conf-vest 0.3`.
+
 ## Link
 
 - Proyek Wokwi: https://wokwi.com/projects/479194485722835969
 - Video demo: _menyusul_
-- Bobot model final: _menyusul (GitHub Releases)_
+- Bobot model final (YOLO26m, 4 kelas, 44 MB): GitHub Releases tag `model-v1` — metrik di
+  [docs/assets/model/metrics.md](docs/assets/model/metrics.md)
 
 ## Tim
 
@@ -73,7 +107,11 @@ Model dilatih memakai **SH17 Dataset** (lisensi CC BY-NC-SA 4.0, non-komersial):
 > H. M. Ahmad and A. Rahimi, "SH17: A dataset for human safety and personal protective equipment detection in manufacturing industry," arXiv:2407.04590, 2024. Sumber: https://github.com/ahmadmughees/SH17dataset
 
 Ditambah **Ultralytics Construction-PPE** (AGPL-3.0, https://docs.ultralytics.com/datasets/detect/construction-ppe/)
-untuk memperkuat deteksi helm dan rompi. Dataset tidak disertakan di repo ini.
+serta [Construction Site Safety Image Dataset (Roboflow)](https://www.kaggle.com/datasets/snehilsanyal/construction-site-safety-image-dataset-roboflow)
+(CC BY 4.0), [Safety Helmet and Reflective Jacket](https://www.kaggle.com/datasets/niravnaik/safety-helmet-and-reflective-jacket)
+(Apache 2.0), dan [HardHat-Vest Dataset v3](https://www.kaggle.com/datasets/muhammetzahitaydn/hardhat-vest-dataset-v3) (CC0)
+untuk memperkuat deteksi helm dan rompi. Dataset tidak disertakan di repo ini. Karena dilatih dengan SH17, **bobot model
+mengikuti CC BY-NC-SA 4.0 (non-komersial)**.
 
 ## Lisensi
 
