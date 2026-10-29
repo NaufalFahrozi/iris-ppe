@@ -155,7 +155,24 @@ Tombol RESET (atau perintah `override` dari dashboard) membungkam buzzer tanpa m
 
 1. **Model:** Ultralytics YOLO26m, fine-tune dari bobot COCO pada 4 kelas: person, head, helmet, safety-vest.
    Data training gabungan 5 dataset publik (17.313 gambar; lihat bab 11 dan `docs/report-sources.md`).
-   [TODO Delima: metrik final per kelas setelah training selesai]
+   Hasil evaluasi model final (`docs/assets/model/metrics.md`, imgsz 640):
+
+   | Kelas | AP50 val SH17 | AP50 test publik* | Precision / Recall test publik |
+   |---|---|---|---|
+   | person | 0,918 | 0,895 | 0,79 / 0,86 |
+   | head | 0,922 | 0,712 | 0,92 / 0,52 |
+   | helmet | 0,643 | 0,850 | 0,84 / 0,77 |
+   | safety-vest | 0,510 | 0,927 | 0,85 / 0,89 |
+   | **mAP50 / mAP50-95** | **0,748 / 0,555** | **0,846 / 0,588** | |
+
+   \*Test publik = split test Construction Site Safety, Safety Helmet & Reflective Jacket, dan HardHat-Vest
+   (2.282 gambar, tidak dipakai training). Label person/head di sebagian test berasal dari pseudo-label, sehingga
+   angka helm dan rompi yang paling bisa dipegang. Val SH17 lebih sulit (gambar resolusi tinggi, objek kecil, banyak
+   variasi). Kecepatan inferensi + tracking di RTX 4050 laptop: 77–80 FPS pada imgsz 640 dan 27–28 FPS pada 1280
+   (diukur pada 300 frame video 1080p); pipeline lengkap dengan MQTT ±75 FPS pada 640.
+   Ambang keyakinan: person 0,4, rompi 0,4 (F1-optimal), helm 0,3 (lebih rendah dari F1-optimal 0,38–0,41 agar helm
+   gelap tetap terdeteksi; diuji pada video patuh dan tanpa rompi).
+   **Model:** YOLO26m dipertahankan (YOLO26s tidak perlu dilatih karena FPS 26m sudah jauh di atas kebutuhan real-time).
 2. **Tracking:** ByteTrack memberi ID per orang antar frame.
 3. **Aturan kepatuhan:** helm dihitung jika pusatnya berada di area kepala kotak orang (0–35% tinggi), rompi jika di
    area badan (15–75%); satu item APD hanya diberikan ke orang terdekat. Tidak memakai kelas "no-helmet".
@@ -220,7 +237,8 @@ Temuan penting selama pengujian dan perbaikannya:
 4. Timer pelanggaran reset saat ID tracking berganti → state diwariskan ke ID baru di posisi yang sama.
 5. FAULT palsu akibat jeda broker publik > 5 s → batas fail-safe 8 s.
 6. Deteksi rompi lemah pada model awal (AP50 0,33) karena data rompi SH17 hanya 433 contoh → dataset diperluas
-   (13.599 contoh rompi). [TODO Delima: metrik sebelum/sesudah]
+   (13.599 contoh rompi). AP50 rompi di val SH17 naik 0,33 → 0,51 dan helm 0,62 → 0,64; di test publik
+   AP50 rompi 0,93 dan helm 0,85.
 
 ## 12. Screenshot / Output
 
@@ -230,7 +248,7 @@ Temuan penting selama pengujian dan perbaikannya:
 - Dashboard: `docs/assets/irisan4/*.jpg`
 - Log Serial & laporan uji MQTT: `docs/assets/irisan2/`, `docs/assets/irisan3/`
 - [TODO] Tangkapan layar vision dengan kotak deteksi (dari uji webcam tim)
-- [TODO] Grafik training (results.png, confusion matrix) dari model final
+- Grafik training & evaluasi model final: `docs/assets/model/results.png`, `docs/assets/model/*/confusion_matrix_normalized.png`, `BoxPR_curve.png`
 
 ## 13. Pembagian Peran Anggota
 
