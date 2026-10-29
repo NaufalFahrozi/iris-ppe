@@ -16,27 +16,27 @@ entry 0x400805dc
 [NET] wifi connected ip=10.13.37.2
 [MQTT] connecting broker.hivemq.com:8883 (TLS) id=iris-zoneA-c40a24
 [MQTT] connected, subscribed sic8-montblanc/iris/{zoneA,server}/...
-[STATUS] {"ts":1793220282,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793234544,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
+[STATUS] {"ts":1793234544,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":[],"person_count":0,"violation_s":0.0}
 [INPUT] person=1 helmet=0 vest=0[STATE] NORMAL missing=helmet,vest
-[STATUS] {"ts":1793220282,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["helmet","vest"],"person_count":1,"violation_s":0.1}
-[STATUS] {"ts":1793220282,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["helmet","vest"],"person_count":1,"violation_s":0.1}
+[STATUS] {"ts":1793234544,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["helmet","vest"],"person_count":1,"violation_s":0.1}
 [INPUT] person=1 helmet=1 vest=0[STATE] NORMAL missing=vest
-[STATUS] {"ts":1793220283,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["vest"],"person_count":1,"violation_s":0.3}
+[STATUS] {"ts":1793234545,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["vest"],"person_count":1,"violation_s":0.3}
 [INPUT] person=1 helmet=1 vest=1
-[STATE] NORMAL missing=-[STATUS] {"ts":1793220283,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}
+[STATE] NORMAL missing=-[STATUS] {"ts":1793234545,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}
 [INPUT] person=1 helmet=0 vest=1
-[STATE] NORMAL missing=helmet[STATUS] {"ts":1793220283,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":0.1}
+[STATE] NORMAL missing=helmet[STATUS] {"ts":1793234545,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":0.1}
 [INPUT] person=1 helmet=1 vest=1
-[STATE] NORMAL missing=-[STATUS] {"ts":1793220285,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}
+[STATE] NORMAL missing=-[STATUS] {"ts":1793234547,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":[],"person_count":1,"violation_s":0.0}
 [INPUT] person=1 helmet=0 vest=1
-[STATE] NORMAL missing=helmet[STATUS] {"ts":1793220285,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":0.1}
-[STATUS] {"ts":1793220287,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":2.5}
+[STATE] NORMAL missing=helmet[STATUS] {"ts":1793234547,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":0.1}
+[STATUS] {"ts":1793234549,"node":"zoneA","mode":"zone","source":"test","state":"NORMAL","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":2.5}
 [STATE] NORMAL -> WARNING missing=helmet persons=1
 [EVENT] node=zoneA type=warning missing=helmet persons=1 duration_s=3.0
-[STATUS] {"ts":1793220288,"node":"zoneA","mode":"zone","source":"test","state":"WARNING","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":3.1}
+[STATUS] {"ts":1793234550,"node":"zoneA","mode":"zone","source":"test","state":"WARNING","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":3.1}
 [STATE] WARNING -> ALARM missing=helmet persons=1
 [EVENT] node=zoneA type=alarm missing=helmet persons=1 duration_s=8.0
-[STATUS] {"ts":1793220293,"node":"zoneA","mode":"zone","source":"test","state":"ALARM","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":8.1}
+[STATUS] {"ts":1793234555,"node":"zoneA","mode":"zone","source":"test","state":"ALARM","gate":"closed","missing":["helmet"],"person_count":1,"violation_s":8.1}
 [INPUT] person=1 helmet=1 vest=1
 [STATE] ALARM -> NORMAL missing=- persons=1
 [EVENT] node=zoneA type=cleared

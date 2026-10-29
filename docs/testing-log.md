@@ -93,10 +93,10 @@ ESP32 di Wokwi mode LIVE gate1, lewat broker.hivemq.com. Skrip: `firmware/test/v
 | ID | Test Case | Input/Condition | Expected Result | Actual Result | Status | Bukti |
 |---|---|---|---|---|---|---|
 | V1 | Aturan kepatuhan (unit) | Kotak buatan: APD lengkap, rompi hilang, helm di tangan, helm milik orang lain, ROI, kedip 35 FPS | Sesuai aturan; status tidak berkedip | 7/7 lulus | Lulus | `vision/test_compliance.py` |
-| V2 | Pekerja patuh (T1 dengan video) | Video 5423610 | Akhirnya GRANTED dan stabil | Sebelum perbaikan: palang **buka-tutup 6×** (keyakinan helm hitam 0,16–0,36 berkedip di sekitar ambang). Setelah voting berbasis waktu 1 s: DENIED sekali di awal, lalu GRANTED stabil | Lulus setelah perbaikan | `docs/assets/irisan3/vision-e2e-serial.log` |
+| V2 | Pekerja patuh (T1 dengan video) | Video 5423610 | Akhirnya GRANTED dan stabil | Sebelum perbaikan: palang **buka-tutup 6×** (keyakinan helm hitam 0,16–0,36 berkedip di sekitar ambang). Setelah voting berbasis waktu 1 s: DENIED sekali di awal, lalu GRANTED stabil | Lulus setelah perbaikan | `docs/assets/irisan3/vision-e2e-gate-serial.log` |
 | V3 | Rompi tidak dipakai (T2 dengan video) | Video 8965561 | DENIED, missing=vest | DENIED stabil, missing=vest | Lulus | idem |
 | V4 | Vision berhenti (T3) | Proses vision selesai | FAULT, gerbang terkunci | `DENIED -> FAULT` ±5 s setelah video habis | Lulus | idem |
-| V5 | Kecepatan | 1080p, RTX 4050 berbagi GPU dengan training | Real-time | 33–40 FPS (diukur pipeline) | Lulus | `vision-e2e-vision.log` |
+| V5 | Kecepatan | 1080p, RTX 4050 berbagi GPU dengan training | Real-time | 33–40 FPS (diukur pipeline) | Lulus | `vision-e2e-gate-vision.log` |
 
 | V6 | Zona, mekanisme eskalasi (multi-orang) | Video 5434223 (2 pekerja, dekat) dan 11798561 (pekerja kecil di kejauhan), `--imgsz 1280` | NORMAL → WARNING → ALARM, reset saat patuh | Mekanisme benar (WARNING 3 s, ALARM 8 s, `cleared`). Tetapi "pelanggaran" di video ini adalah **deteksi yang meleset** (helm hitam, objek kecil), dan sempat terjadi FAULT palsu sekali (jeda jaringan > 5 s) | Lulus mekanisme; temuan ditindaklanjuti | `vision-e2e-zone-*.log` (run awal) |
 | V7 | **T6 zona dengan pelanggaran nyata** | Video 8965561 (pekerja tanpa rompi) diputar 3× (`--loop 3`) | Abaikan < 3 s → WARNING → ALARM + event, lalu FAULT setelah vision berhenti | `NORMAL -> WARNING` (3,0 s) → `ALARM` (8,1 s) → `FAULT` | Lulus | `docs/assets/irisan3/vision-e2e-zone-serial.log` |
@@ -105,6 +105,8 @@ ESP32 di Wokwi mode LIVE gate1, lewat broker.hivemq.com. Skrip: `firmware/test/v
 Perbaikan dari V6: (1) `FAILSAFE_TIMEOUT_MS` 5 s → **8 s** (`firmware/src/config.h`) karena jeda broker publik memicu
 FAULT palsu; (2) state per orang **diwariskan saat ID tracking berganti** (track baru di posisi dekat dalam ≤ 1,5 s)
 agar timer pelanggaran tidak reset; unit test 8/8 lulus.
+
+Regresi setelah fail-safe 8 s (2026-10-29 pagi): uji video gerbang diulang (bukti di atas dibuat ulang: DENIED awal → GRANTED → jendela 5 s → GRANTED lagi → FAULT; tanpa rompi → DENIED → FAULT) dan mode TEST gate/zone/failsafe lulus (gate sempat gagal sekali karena koneksi API Wokwi terputus, kode 1006; lulus saat diulang).
 
 Temuan: deteksi helm hitam tampak belakang lemah pada bobot sementara (DENIED awal di V2). Ditindaklanjuti dengan run 3
 (data helm ×19) dan ambang per kelas yang akan dihitung dari kurva F1 validasi.
