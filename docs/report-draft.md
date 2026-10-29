@@ -252,7 +252,17 @@ Temuan penting selama pengujian dan perbaikannya:
 
 ## 13. Pembagian Peran Anggota
 
-[TODO: isi dari `docs/contributions.md` sesuai pekerjaan yang benar-benar dilakukan]
+| Anggota | Peran | Tanggung jawab utama |
+|---|---|---|
+| Muhammad Naufal Fahrozi | Project Lead & System Integrator | Perencanaan, arsitektur, integrasi end-to-end, koordinasi uji, laporan final |
+| Christian Mahatma Bima Alpindo | Hardware & Embedded Engineer | Komponen, wiring & GPIO Wokwi, firmware ESP32, uji perangkat |
+| Tua Delima Sitompul | AI & Backend Engineer | Dataset, training & evaluasi YOLO, pipeline vision, MQTT, data dashboard |
+| Kalingga Dwindra Putraka | Product & Visual Designer | Logo, diagram, desain dashboard, cover & tata letak laporan, video demo |
+
+Tim bekerja bersama dalam sesi kerja di satu laptop; tiap anggota adalah penanggung jawab utama bidangnya. Implementasi
+kode, training, dan draf dokumen dibantu AI coding agent (Claude Code) di bawah arahan ketua, sedangkan konsep, aturan,
+dan keputusan teknis ditentukan tim. Seluruh anggota meninjau, menguji, dan mampu menjelaskan bagiannya. Rincian:
+`docs/contributions.md`.
 
 | Anggota | Peran | Kontribusi |
 |---|---|---|
