@@ -397,7 +397,8 @@ Catat untuk setiap tes: Test Case, Input/Condition, Expected Result, Actual Resu
 - [x] 1. Rancangan dasar (draft `docs/design.md`; GPIO menunggu review Christian)
 - [x] 2. Irisan 1 – Gerbang tanpa YOLO (logic gerbang+zona lulus 8 uji wokwi-cli I1-1..I1-8; rangkaian dirapikan dan dicek visual)
 - [x] 3. Irisan 2 – MQTT (TLS + verifikasi CA, e2e via simulator Python: T1–T5 + override 9/9, T6 4/4 di Wokwi; T1–T6 dengan vision asli menunggu irisan 3/5)
-- [ ] 4. Irisan 3 – Vision
+- [x] 4. Irisan 3 – Vision (pipeline YOLO + ByteTrack + aturan + MQTT; uji video→ESP32 V1–V5 lulus; model final & ambang per kelas menunggu run 3)
 - [x] 5. Irisan 4 – Dashboard (Plotly Dash `dashboard/app.py`; uji D1–D5 lulus dengan 2 ESP32 Wokwi + simulator vision)
-- [ ] 6. Irisan 5 – Monitoring
+- [x] 6. Irisan 5 – Monitoring (timer per orang + pewarisan saat ID berganti, eskalasi zona, fail-safe heartbeat 8 s; T6 nyata dengan video lulus V7)
+- Dokumen pendukung: `docs/demo-runbook.md` (panduan uji webcam & video demo), `docs/report-draft.md` (draf 16 bab laporan), `docs/report-sources.md` (data resmi terverifikasi)
 - [ ] 7. Finalisasi & pengumpulan
