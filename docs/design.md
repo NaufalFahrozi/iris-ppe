@@ -59,7 +59,7 @@ memakai modul atau transistor driver.
 
 ## 3. Pemetaan GPIO
 
-Status: draft v2 (2026-10-29), lulus uji wokwi-cli dan dicek visual di editor wokwi.com; menunggu review Christian.
+Status: final (2026-10-30), lulus uji wokwi-cli, dicek visual di editor wokwi.com, dan sudah direview Christian.
 
 Prinsip tata letak: **input di sisi kiri board, output di sisi kanan**, dan urutan komponen di diagram mengikuti
 urutan pin dari atas ke bawah, sehingga kabel tidak saling silang (lihat `firmware/diagram.json`).

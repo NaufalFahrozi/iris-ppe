@@ -336,7 +336,7 @@ iris-ppe/
 - Nilai ambang eskalasi dan timeout fail-safe (`firmware/src/config.h`: warn 3 s, alarm 8 s, jendela buka 5 s; fail-safe dinaikkan 5 → 8 s setelah uji video karena jeda broker publik memicu FAULT palsu)
 - Resolusi inferensi: gerbang (kamera dekat) 640, zona/CCTV jauh 1280 (uji V8). Ambang final: person 0,4, helm 0,3, rompi 0,4
   (uji V9); bisa disesuaikan saat uji webcam
-- Pemetaan GPIO final (draft v2 di `docs/design.md` bagian 3: input kiri, output kanan; menunggu review Christian)
+- Pemetaan GPIO sudah final dan direview Christian (`docs/design.md` bagian 3: input kiri, output kanan)
 - Proyek wokwi.com sudah dibuat dan disimpan (Public, akun naufalfahrozi; Unlisted hanya untuk paket berbayar):
   https://wokwi.com/projects/479194485722835969 — isi = `firmware/export_wokwi_web.py` (sketch, diagram, config.h,
   ca_cert.h, 5 library). Setiap firmware berubah, perbarui juga proyek ini (sketch.ino ditempel manual via Ctrl+V).
@@ -408,7 +408,7 @@ Catat untuk setiap tes: Test Case, Input/Condition, Expected Result, Actual Resu
 ## 15. Status
 
 - [x] 0. Setup & uji kelayakan Wokwi CLI (2026-10-29: repo, tools, uji Wokwi F0 lulus, uji TLS broker lulus, SH17 siap, training run `sh17-yolo26m` dimulai)
-- [x] 1. Rancangan dasar (draft `docs/design.md`; GPIO menunggu review Christian)
+- [x] 1. Rancangan dasar (`docs/design.md`; GPIO final, sudah direview Christian)
 - [x] 2. Irisan 1 – Gerbang tanpa YOLO (logic gerbang+zona lulus 8 uji wokwi-cli I1-1..I1-8; rangkaian dirapikan dan dicek visual)
 - [x] 3. Irisan 2 – MQTT (TLS + verifikasi CA, e2e via simulator Python: T1–T5 + override 9/9, T6 4/4 di Wokwi; T1–T6 dengan vision asli menunggu irisan 3/5)
 - [x] 4. Irisan 3 – Vision (pipeline YOLO + ByteTrack + aturan + MQTT; uji video→ESP32 V1–V5 lulus; model final & ambang per kelas menunggu run 3)
