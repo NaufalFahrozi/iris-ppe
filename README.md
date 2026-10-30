@@ -103,7 +103,7 @@ Catatan:
 
 - Proyek Wokwi: https://wokwi.com/projects/479194485722835969
 - Video demo: https://drive.google.com/file/d/1giYchnkk2TzmtZAvprm3sBxQMqTbNg5-/view?usp=drive_link
-- Laporan: [docs/IRIS-Laporan-Stage2.docx](docs/IRIS-Laporan-Stage2.docx)
+- Laporan: [SIC8_Stage 2_Montblanc_IRIS Smart PPE Compliance Gate and Monitoring System Using Computer Vision.docx](docs/SIC8_Stage%202_Montblanc_IRIS%20Smart%20PPE%20Compliance%20Gate%20and%20Monitoring%20System%20Using%20Computer%20Vision.docx)
 - Bobot model final (YOLO26m, 4 kelas, 44 MB): GitHub Releases tag `model-v1` — metrik di
   [docs/assets/model/metrics.md](docs/assets/model/metrics.md)
 
