@@ -30,9 +30,16 @@ class Store:
         DATA_DIR.mkdir(exist_ok=True)
         self.client = iris_mqtt.connect("dashboard")
         self.client.on_message = self._on_message
+        self.client.on_connect = self._on_connect  # langganan hilang saat koneksi putus, ulangi saat tersambung lagi
+        self._subscribe()
+
+    def _subscribe(self):
         for leaf in ("status", "event", "detection"):
             self.client.subscribe(f"{iris_mqtt.PREFIX}/+/{leaf}")
         self.client.subscribe(iris_mqtt.HEARTBEAT_TOPIC)
+
+    def _on_connect(self, client, userdata, flags, reason_code, properties=None):
+        self._subscribe()
 
     # ---- MQTT ----
     def _on_message(self, client, userdata, msg):

@@ -102,7 +102,7 @@ mudah terdeteksi daripada helm hitam, rompi reflektif paling mudah.
 | `No Python at '...cpython-3.12.12...'` | Python dasar venv belum terpasang untuk user ini | `uv python install 3.12.12`, lalu ulangi |
 | Kecepatan simulasi Wokwi turun ke ±3%, dashboard `gate1`/`zoneA` OFFLINE | Jendela Wokwi tersembunyi (diminimize atau tertutup jendela lain) sehingga browser menahannya | Tampilkan jendela Wokwi; jika koneksi sudah putus, tekan ⟳ lalu geser SOURCE ke LIVE lagi |
 | Serial terus `wifi connecting`, ikon WiFi simulator dicoret | Gateway Wokwi belum tersambung, terutama setelah ganti jaringan (saat uji butuh ±1 menit) | Tunggu sebentar; jika masih gagal, muat ulang halaman dan tekan ▶ lagi |
-| Dashboard tertulis "Broker terhubung" tetapi datanya berhenti | Dashboard tidak berlangganan ulang setelah koneksi internet putus | Jalankan ulang dashboard |
+| Dashboard tertulis "Broker terhubung" tetapi datanya berhenti | Koneksi internet sempat putus | Dashboard tersambung dan berlangganan ulang otomatis; tunggu beberapa detik, jalankan ulang jika tetap berhenti |
 | Spam `can't grab frame` / layar hitam | Indeks kamera salah (kamera bawaan rusak) | Pakai `--source 1` (webcam USB) |
 
 Kalau masih bingung: salin pesan error lengkap + jelaskan langkah yang dilakukan, kirim ke Naufal / agent.
