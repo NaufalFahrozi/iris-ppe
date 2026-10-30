@@ -43,6 +43,7 @@ Sumber untuk bab "Pembagian Peran Anggota" di laporan.
 - Pipeline vision: tracking ByteTrack, aturan kepatuhan berbasis posisi kotak, voting 1 detik, timer pelanggaran per
   orang, ROI gerbang, publisher MQTT dan heartbeat.
 - Sisi data dashboard: langganan MQTT, compliance rate, pencatatan event ke CSV.
+- Merapikan isi, format, dan versi final laporan .docx.
 - Bagian laporan: computer vision, komunikasi MQTT, dashboard (sisi data).
 - Bukti: `training/`, `vision/`, `dashboard/app.py`, `docs/assets/model/`, `docs/assets/irisan3/`.
 
