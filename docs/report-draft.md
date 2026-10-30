@@ -229,7 +229,7 @@ Ringkasan dari `docs/testing-log.md` (rincian dan bukti lengkap ada di sana).
 | T5 | Pelanggar masuk saat palang terbuka | Palang menutup + alarm | `GRANTED -> DENIED`, servo 0° | Lulus |
 | T6 | Zona: helm/rompi dilepas makin lama | Abaikan → WARNING → ALARM + event → reset | WARNING 3,0 s, ALARM 8,1 s, `cleared` (simulator & video) | Lulus |
 
-[TODO: tambahkan hasil uji langsung dengan webcam + APD tim, mengikuti `docs/demo-runbook.md`]
+Uji langsung dengan webcam USB, helm, dan rompi asli saat rekaman video demo: T1–T6 lulus (rincian di `docs/testing-log.md`).
 
 Temuan penting selama pengujian dan perbaikannya:
 1. Tombol uji tidak terbaca karena loop terlalu lama menggambar OLED → OLED hanya digambar ulang jika isinya berubah.

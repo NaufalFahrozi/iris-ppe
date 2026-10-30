@@ -123,14 +123,16 @@ setelah heartbeat berhenti; OLED menampilkan "OFFLINE / Gerbang terkunci". Bukti
 
 ## Skenario utama (T1–T6)
 
+Uji resmi 2026-10-30 dengan webcam USB, helm, dan rompi asli saat rekaman video demo (`--ignore-vest` tidak dipakai). Tim memakai 1 rompi dan 2 helm: A = helm + rompi, B = helm saja. Hasil T1–T5 dikonfirmasi ketua setelah mengecek video; T6 juga dari log event.
+
 | ID | Test Case | Input/Condition | Expected Result | Actual Result | Status | Bukti |
 |---|---|---|---|---|---|---|
-| T1 | Satu orang, APD lengkap, di gerbang | | Palang terbuka, LED hijau, status `GRANTED` terkirim | | Belum diuji | |
-| T2 | Satu orang, rompi tidak dipakai | | Palang tertutup, buzzer, OLED menampilkan item yang kurang | | Belum diuji | |
-| T3 | Server vision mati / heartbeat berhenti | | Fail-safe: gerbang terkunci, indikator gangguan | | Belum diuji | |
-| T4 | Dua orang, satu tidak patuh | | Palang tetap tertutup | | Belum diuji | |
-| T5 | Pelanggar masuk ROI saat palang terbuka | | Palang menutup, alarm | | Belum diuji | |
-| T6 | Zona kerja: pekerja melepas helm makin lama | | Abaikan → peringatan → alarm + event dashboard, reset saat patuh | | Belum diuji | |
+| T1 | Satu orang, APD lengkap, di gerbang | A: helm + rompi, sendirian di depan webcam | Palang terbuka, LED hijau, status `GRANTED` terkirim | Palang terbuka, LED hijau, `GRANTED` | Lulus | Video demo; log `docs/assets/demo/events-rekaman.csv` |
+| T2 | Satu orang, rompi tidak dipakai | A melepas rompi | Palang tertutup, buzzer, OLED menampilkan item yang kurang | Palang tertutup, buzzer, OLED "Kurang: ROMPI" | Lulus | Video demo; log `docs/assets/demo/events-rekaman.csv` |
+| T3 | Server vision mati / heartbeat berhenti | Server vision dihentikan | Fail-safe: gerbang terkunci, indikator gangguan | `FAULT`: gerbang terkunci, OLED "OFFLINE" | Lulus | Video demo; log `docs/assets/demo/events-rekaman.csv` |
+| T4 | Dua orang, satu tidak patuh | A (lengkap) dan B (helm saja) bersama | Palang tetap tertutup | Palang tetap tertutup, `DENIED`, missing=vest | Lulus | Video demo; log `docs/assets/demo/events-rekaman.csv` |
+| T5 | Pelanggar masuk ROI saat palang terbuka | B masuk frame saat palang terbuka | Palang menutup, alarm | `GRANTED -> DENIED`, palang menutup, buzzer | Lulus | Video demo; log `docs/assets/demo/events-rekaman.csv` |
+| T6 | Zona kerja: pekerja melepas helm makin lama | Zona: A melepas helm lalu memakainya lagi | Abaikan → peringatan → alarm + event dashboard, reset saat patuh | WARNING 3,1 s, ALARM 8,4 s, `cleared` saat patuh | Lulus | Video demo; log `docs/assets/demo/events-rekaman.csv` |
 
 Pemeriksaan ulang menyeluruh (2026-10-29 malam): unit test 12/12, build firmware sukses (flash 93,4%), vision → broker
 diverifikasi dengan subscriber (detection + heartbeat), dashboard berjalan, webcam terbaca (1280×720). Temuan lingkungan:
