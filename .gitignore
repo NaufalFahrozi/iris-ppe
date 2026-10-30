@@ -65,3 +65,7 @@ session-report-*.html
 
 # Bobot model lokal (dibagikan lewat Releases/Drive)
 /models/
+
+# File sementara Word
+~$*
+~WRL*

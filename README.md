@@ -10,7 +10,7 @@ Dua mode:
 1. **Gerbang (preventif):** palang hanya terbuka jika semua orang di area masuk memakai helm dan rompi.
 2. **Monitoring zona (detektif):** pelanggaran di zona kerja dieskalasi berdasarkan durasi (abaikan → peringatan → alarm), reset otomatis saat patuh kembali.
 
-> Status: dalam pengembangan (stage 2). Lihat [CLAUDE.md](CLAUDE.md) bagian Status.
+> Status: stage 2 selesai (video demo dan laporan final). Lihat [CLAUDE.md](CLAUDE.md) bagian Status.
 
 ## Arsitektur singkat
 
@@ -102,7 +102,8 @@ Catatan:
 ## Link
 
 - Proyek Wokwi: https://wokwi.com/projects/479194485722835969
-- Video demo: _menyusul_
+- Video demo: https://drive.google.com/file/d/1giYchnkk2TzmtZAvprm3sBxQMqTbNg5-/view?usp=drive_link
+- Laporan: [docs/IRIS-Laporan-Stage2.docx](docs/IRIS-Laporan-Stage2.docx)
 - Bobot model final (YOLO26m, 4 kelas, 44 MB): GitHub Releases tag `model-v1` — metrik di
   [docs/assets/model/metrics.md](docs/assets/model/metrics.md)
 

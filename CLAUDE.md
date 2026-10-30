@@ -415,5 +415,5 @@ Catat untuk setiap tes: Test Case, Input/Condition, Expected Result, Actual Resu
 - [x] 5. Irisan 4 – Dashboard (Plotly Dash `dashboard/app.py`; uji D1–D5 lulus dengan 2 ESP32 Wokwi + simulator vision)
 - [x] 6. Irisan 5 – Monitoring (timer per orang + pewarisan saat ID berganti, eskalasi zona, fail-safe heartbeat 8 s; T6 nyata dengan video lulus V7)
 - Dokumen pendukung: `docs/demo-runbook.md` (panduan uji webcam & video demo), `docs/report-draft.md` (draf 16 bab laporan), `docs/report-sources.md` (data resmi terverifikasi)
-- Video demo direkam 2026-10-30 (log event: `docs/assets/demo/events-rekaman.csv`). Laporan: `docs/IRIS-Laporan-Stage2.docx`; bagian highlight kuning (logo, screenshot, link video); hasil uji resmi T1-T6 lulus masih perlu diisi tim
+- Video demo direkam 2026-10-30 (log event: `docs/assets/demo/events-rekaman.csv`). Hasil uji resmi T1-T6 lulus. Laporan final (format akhir oleh Delima): `docs/IRIS-Laporan-Stage2.docx`. Video: https://drive.google.com/file/d/1giYchnkk2TzmtZAvprm3sBxQMqTbNg5-/view?usp=drive_link
 - [ ] 7. Finalisasi & pengumpulan
