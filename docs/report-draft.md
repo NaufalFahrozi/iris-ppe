@@ -1,4 +1,6 @@
-# DRAF ISI LAPORAN — IRIS (untuk diubah ke .docx)
+# DRAF ISI LAPORAN — IRIS (arsip)
+
+> **Sudah tidak dipakai.** Versi final ada di `docs/SIC8_Stage 2_Montblanc_IRIS Smart PPE Compliance Gate and Monitoring System Using Computer Vision.docx`. Tanda [TODO] di bawah sudah diselesaikan di versi final.
 
 > Draf ini disusun agent dari pekerjaan yang sudah teruji di repo. Urutan bab mengikuti
 > `docs/study-case-guideline-stage-2.pdf`. Bagian bertanda **[TODO]** menunggu hasil akhir (metrik model final,

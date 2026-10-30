@@ -54,7 +54,7 @@ Sumber untuk bab "Pembagian Peran Anggota" di laporan.
 - Cover dan tata letak laporan .docx; penyusunan draf laporan 16 bab.
 - Storyboard dan editing video demo .mp4.
 - Bagian laporan: cover, semua diagram/visual, screenshot & tata letak, video demo.
-- Bukti: `docs/report-draft.md`, `docs/assets/`, video demo.
+- Bukti: `docs/iris-logo.PNG`, `docs/assets/`, laporan .docx di `docs/`, video demo.
 
 ## Pengujian
 
