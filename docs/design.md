@@ -184,6 +184,11 @@ simulator browser wokwi.com lambat). Pada mode LIVE, ESP32 masuk `FAULT` sebelum
 tertutup selama itu; pada mode TEST aktuator mempertahankan state terakhir dan timer lokal ikut berjalan. Pada mode
 LIVE durasi pelanggaran dihitung server, jadi timer zona tidak terpengaruh.
 
+**Perilaku simulasi Wokwi (uji 2026-10-30):** saat halaman tersembunyi, kecepatan simulasi turun ke ±3%, sehingga ESP32
+terlambat mengirim status dan broker menganggapnya putus (Last Will `OFFLINE`). Saat halaman terlihat, kecepatan 93–102%
+dan status terkirim tiap 5 s. Client ID diturunkan dari MAC yang sama, jadi dua simulasi node yang sama akan saling
+memutus koneksi; jalankan satu simulasi saja.
+
 ## 6. Dashboard (`dashboard/`)
 
 Plotly Dash, berjalan lokal di http://127.0.0.1:8050, refresh tiap 1 detik. `store.py` subscribe

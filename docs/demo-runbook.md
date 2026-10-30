@@ -24,8 +24,10 @@ tekan Enter untuk kamera USB (indeks 1). Launcher menjalankan langkah 2 dan 3 di
 
 Pilih salah satu:
 
-- **A. wokwi.com (untuk demo/video):** buka proyek IRIS di wokwi.com, geser slide switch
-  **SOURCE ke kiri (LIVE)** dan **ROLE** sesuai mode (kiri = GATE, kanan = ZONE), lalu tekan ▶.
+- **A. wokwi.com (untuk demo/video):** buka proyek IRIS di wokwi.com, tekan ▶, tunggu `[MQTT] connected`, lalu geser
+  slide switch **SOURCE ke kiri (LIVE)** dan **ROLE** sesuai mode (kiri = GATE, kanan = ZONE). Setelah halaman dimuat
+  ulang, SOURCE kembali ke TEST, jadi perlu digeser lagi. Jalankan hanya satu simulasi, dan jendelanya harus tetap
+  terlihat di layar (lihat bagian 5).
 - **B. wokwi-cli (tanpa browser):**
   ```
   cd firmware; pio run; cd ..
@@ -98,6 +100,9 @@ mudah terdeteksi daripada helm hitam, rompi reflektif paling mudah.
 | Dashboard "Broker terputus" | Internet putus | Sambungkan internet, refresh halaman |
 | `ModuleNotFoundError` | venv belum dipakai | Selalu jalankan dengan `.venv\Scripts\python` |
 | `No Python at '...cpython-3.12.12...'` | Python dasar venv belum terpasang untuk user ini | `uv python install 3.12.12`, lalu ulangi |
+| Kecepatan simulasi Wokwi turun ke ±3%, dashboard `gate1`/`zoneA` OFFLINE | Jendela Wokwi tersembunyi (diminimize atau tertutup jendela lain) sehingga browser menahannya | Tampilkan jendela Wokwi; jika koneksi sudah putus, tekan ⟳ lalu geser SOURCE ke LIVE lagi |
+| Serial terus `wifi connecting`, ikon WiFi simulator dicoret | Gateway Wokwi belum tersambung, terutama setelah ganti jaringan (saat uji butuh ±1 menit) | Tunggu sebentar; jika masih gagal, muat ulang halaman dan tekan ▶ lagi |
+| Dashboard tertulis "Broker terhubung" tetapi datanya berhenti | Dashboard tidak berlangganan ulang setelah koneksi internet putus | Jalankan ulang dashboard |
 | Spam `can't grab frame` / layar hitam | Indeks kamera salah (kamera bawaan rusak) | Pakai `--source 1` (webcam USB) |
 
 Kalau masih bingung: salin pesan error lengkap + jelaskan langkah yang dilakukan, kirim ke Naufal / agent.
