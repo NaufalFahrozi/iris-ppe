@@ -24,7 +24,7 @@ Anggota:
 | Muhammad Naufal Fahrozi | Ketua · Project Lead & System Integrator | [NaufalFahrozi](https://github.com/NaufalFahrozi) |
 | Christian Mahatma Bima Alpindo | Hardware & Embedded Engineer | [ChristianMahatma](https://github.com/ChristianMahatma) |
 | Tua Delima Sitompul | AI & Backend Engineer | [delima-sitompul](https://github.com/delima-sitompul) |
-| Kalingga Dwindra Putraka | Product & Visual Designer | [Kal2501](https://github.com/Kal2501) |
+| Kalingga Dwindra Putraka | Product & Visual Designer | [whateverkmeans](https://github.com/whateverkmeans) |
 
 Tim bekerja bersama di semua bagian; peran di bawah menunjukkan **penanggung jawab utama** tiap bidang.
 
