@@ -166,10 +166,10 @@ Tombol RESET (atau perintah `override` dari dashboard) membungkam buzzer tanpa m
    | **mAP50 / mAP50-95** | **0,748 / 0,555** | **0,846 / 0,588** | |
 
    \*Test publik = split test Construction Site Safety, Safety Helmet & Reflective Jacket, dan HardHat-Vest
-   (2.282 gambar, tidak dipakai training). Label person/head di sebagian test berasal dari pseudo-label, sehingga
+   (1.682 gambar, tidak dipakai training). Label person/head di sebagian test berasal dari pseudo-label, sehingga
    angka helm dan rompi yang paling bisa dipegang. Val SH17 lebih sulit (gambar resolusi tinggi, objek kecil, banyak
    variasi). Kecepatan inferensi + tracking di RTX 4050 laptop: 77–80 FPS pada imgsz 640 dan 27–28 FPS pada 1280
-   (diukur pada 300 frame video 1080p); pipeline lengkap dengan MQTT ±75 FPS pada 640.
+   (diukur pada 300 frame video 1080p); pipeline lengkap dengan MQTT 78–85 FPS pada 640.
    Ambang keyakinan: person 0,4, rompi 0,4 (F1-optimal), helm 0,3 (lebih rendah dari F1-optimal 0,38–0,41 agar helm
    gelap tetap terdeteksi; diuji pada video patuh dan tanpa rompi).
    **Model:** YOLO26m dipertahankan (YOLO26s tidak perlu dilatih karena FPS 26m sudah jauh di atas kebutuhan real-time).
